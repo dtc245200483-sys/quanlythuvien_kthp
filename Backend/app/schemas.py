@@ -40,12 +40,14 @@ class LibraryConfigOut(BaseModel):
 
     max_borrow_days: int
     overdue_fine_points_per_day: int
+    overdue_fine_vnd_per_day_lecturer: int
     max_books_at_once: int
 
 
 class LibraryConfigUpdate(BaseModel):
     max_borrow_days: int = Field(..., ge=1, le=365)
     overdue_fine_points_per_day: int = Field(..., ge=0)
+    overdue_fine_vnd_per_day_lecturer: int = Field(..., ge=0)
     max_books_at_once: int = Field(..., ge=1, le=100)
 
 
@@ -139,6 +141,7 @@ class BorrowDetailOut(BaseModel):
 class FineOut(BaseModel):
     so_ngay_qua_han: int
     so_diem: int
+    so_tien: int = 0
     da_thu: bool = False
     ngay_thu: datetime | None = None
 
@@ -328,8 +331,9 @@ class NotificationOut(BaseModel):
 
 class CollectFineOut(BaseModel):
     message: str
-    so_diem_da_thu: int
-    diem_con_lai: int
+    so_diem_da_thu: int = 0
+    so_tien_da_thu: int = 0
+    diem_con_lai: int = 0
     ngay_thu: datetime
 
 

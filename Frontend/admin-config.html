@@ -19,24 +19,56 @@
       <span>Đang tải dữ liệu...</span>
     </div>
 
+    <!-- ===== CẤU HÌNH MƯỢN SÁCH CHUNG ===== -->
     <section class="card">
-      <h2>Cấu hình thư viện</h2>
+      <h2>Cấu hình mượn sách</h2>
       <form id="library-config-form" novalidate>
         <div class="form-group">
           <label for="cfg-max-borrow-days">Số ngày mượn tối đa</label>
           <input type="number" id="cfg-max-borrow-days" name="maxBorrowDays" min="1" max="365" required>
         </div>
         <div class="form-group">
-          <label for="cfg-fine">Phạt quá hạn (điểm/ngày)</label>
-          <input type="number" id="cfg-fine" name="overdueFinePointsPerDay" min="0" step="1" value="2" required>
-          <p class="hint">Trừ điểm sinh viên: 1 ngày quá hạn = 2 điểm</p>
-        </div>
-        <div class="form-group">
           <label for="cfg-max-books">Giới hạn số sách mượn cùng lúc</label>
           <input type="number" id="cfg-max-books" name="maxBooksAtOnce" min="1" max="100" required>
         </div>
         <div class="modal-actions">
-          <button type="submit" id="save-library-config-button" class="btn btn-primary">Lưu cấu hình thư viện</button>
+          <button type="submit" id="save-library-config-button" class="btn btn-primary">Lưu cấu hình mượn sách</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===== CẤU HÌNH PHẠT SINH VIÊN ===== -->
+    <section class="card">
+      <h2>Hình phạt quá hạn — Sinh viên</h2>
+      <p style="color:var(--color-muted,#6b7280); margin-bottom:1rem; font-size:0.95rem;">
+        Sinh viên vi phạm sẽ bị <strong>trừ điểm SVNET</strong>. Điểm ban đầu là 100, không tính tiền phạt.
+      </p>
+      <form id="student-fine-form" novalidate>
+        <div class="form-group">
+          <label for="cfg-fine-sv">Điểm SVNET bị trừ mỗi ngày quá hạn</label>
+          <input type="number" id="cfg-fine-sv" name="overdueFinePointsPerDay" min="0" max="100" step="1" required>
+          <p class="hint">Mặc định: 2 điểm/ngày — Ví dụ: quá hạn 3 ngày → trừ 6 điểm SVNET.</p>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" id="save-student-fine-button" class="btn btn-primary">Lưu phạt sinh viên</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===== CẤU HÌNH PHẠT GIẢNG VIÊN ===== -->
+    <section class="card">
+      <h2>Hình phạt quá hạn — Giảng viên</h2>
+      <p style="color:var(--color-muted,#6b7280); margin-bottom:1rem; font-size:0.95rem;">
+        Giảng viên vi phạm sẽ bị <strong>phạt tiền (VNĐ)</strong>, điểm SVNET không bị ảnh hưởng.
+      </p>
+      <form id="lecturer-fine-form" novalidate>
+        <div class="form-group">
+          <label for="cfg-fine-gv">Số tiền phạt mỗi ngày quá hạn (VNĐ)</label>
+          <input type="number" id="cfg-fine-gv" name="overdueFineVndPerDayLecturer" min="0" step="1000" required>
+          <p class="hint">Mặc định: 5.000 VNĐ/ngày — Ví dụ: quá hạn 3 ngày → phạt 15.000 VNĐ.</p>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" id="save-lecturer-fine-button" class="btn btn-primary">Lưu phạt giảng viên</button>
         </div>
       </form>
     </section>
@@ -98,6 +130,6 @@
   <script src="js/auth.js?v=20260809-14"></script>
   <script src="js/layout.js?v=20260916-01"></script>
   <script>window.Layout.init("admin-config");</script>
-  <script src="js/admin-config.js?v=20260810-2"></script>
+  <script src="js/admin-config.js?v=20260922-02"></script>
 </body>
 </html>

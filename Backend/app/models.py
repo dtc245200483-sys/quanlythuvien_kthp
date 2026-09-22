@@ -102,6 +102,9 @@ class LibraryConfig(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=False)
     max_borrow_days: Mapped[int] = mapped_column(Integer, nullable=False)
     overdue_fine_points_per_day: Mapped[int] = mapped_column(Integer, nullable=False, default=2)
+    overdue_fine_vnd_per_day_lecturer: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=5000
+    )
     max_books_at_once: Mapped[int] = mapped_column(Integer, nullable=False)
 
     __table_args__ = (
@@ -110,6 +113,10 @@ class LibraryConfig(Base):
         CheckConstraint(
             "overdue_fine_points_per_day >= 0",
             name="ck_library_config_points",
+        ),
+        CheckConstraint(
+            "overdue_fine_vnd_per_day_lecturer >= 0",
+            name="ck_library_config_fine_lecturer",
         ),
         CheckConstraint("max_books_at_once > 0", name="ck_library_config_max_books"),
     )
@@ -230,6 +237,7 @@ class FineHistory(Base):
     ma_doc_gia: Mapped[str] = mapped_column(Unicode(20), nullable=False)
     so_ngay_qua_han: Mapped[int] = mapped_column(Integer, nullable=False)
     so_diem: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    so_tien: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     da_thu: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     ngay_thu: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     ngay_tinh: Mapped[datetime] = mapped_column(
@@ -241,6 +249,7 @@ class FineHistory(Base):
     __table_args__ = (
         CheckConstraint("so_ngay_qua_han >= 0", name="ck_fine_history_days"),
         CheckConstraint("so_diem >= 0", name="ck_fine_history_points"),
+        CheckConstraint("so_tien >= 0", name="ck_fine_history_amount"),
         Index("ix_fine_history_ma_phieu", "ma_phieu"),
     )
 

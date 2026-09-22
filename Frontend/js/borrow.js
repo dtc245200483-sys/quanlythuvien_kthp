@@ -1,378 +1,499 @@
-/* Mượn / Trả sách — dành cho thủ thư (librarian) */
+/* Trang mượn / trả / gia hạn sách (chỉ librarian — admin không thao tác phiếu mượn). */
 (function () {
   var API = window.API;
   var Auth = window.Auth;
   var messageTimer = null;
+  var availableBooks = [];
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
+  var finesList = [];
 
   function showMessage(text, type) {
     var el = document.getElementById("page-message");
-    if (!el) return;
-    if (messageTimer) clearTimeout(messageTimer);
+    if (!el) {
+      return;
+    }
+    if (messageTimer) {
+      clearTimeout(messageTimer);
+    }
     el.className = "alert " + (type || "alert-error");
     el.textContent = text;
     el.hidden = false;
-    window.scrollTo({ top: 0, behavior: "smooth" });
     messageTimer = setTimeout(function () {
       el.hidden = true;
       messageTimer = null;
-    }, 7000);
+    }, 6000);
+  }
+
+  function clearMessage() {
+    if (messageTimer) {
+      clearTimeout(messageTimer);
+      messageTimer = null;
+    }
+    var el = document.getElementById("page-message");
+    if (el) {
+      el.hidden = true;
+    }
   }
 
   function setLoading(visible) {
     var el = document.getElementById("loading");
-    if (el) el.hidden = !visible;
+    if (el) {
+      el.hidden = !visible;
+    }
   }
 
-  function fmtDate(iso) {
-    if (!iso) return "—";
-    return new Date(iso).toLocaleString("vi-VN");
+  function loadReaders() {
+    API.call("readers")
+      .then(function (res) {
+        if (!res.ok) {
+          showMessage(res.message);
+          return;
+        }
+        var select = document.getElementById("borrow-reader");
+        select.innerHTML = '<option value="">— Chọn độc giả —</option>';
+        (res.data || []).forEach(function (item) {
+          var reader = API.mapResponse("readerOut", item);
+          if (!reader) {
+            return;
+          }
+          var option = document.createElement("option");
+          option.value = reader.ma;
+          option.textContent = reader.ma + " — " + reader.hoTen;
+          select.appendChild(option);
+        });
+      })
+      .catch(function () {
+        showMessage("Đã xảy ra lỗi khi tải danh sách độc giả.");
+      });
   }
 
-  function isOverdue(hanTra) {
-    if (!hanTra) return false;
-    return new Date(hanTra) < new Date();
+  function loadLibraryConfig() {
+    API.call("libraryConfig")
+      .then(function (res) {
+        if (!res.ok) {
+          return;
+        }
+        var cfg = API.mapResponse("libraryConfig", res.data);
+        if (!cfg) {
+          return;
+        }
+        var input = document.getElementById("borrow-so-ngay");
+        if (input) {
+          input.value = cfg.maxBorrowDays || 14;
+          input.max = cfg.maxBorrowDays || 365;
+        }
+      })
+      .catch(function () {});
   }
 
-  // ── Thêm dòng sách vào form tạo phiếu ────────────────────────────────────
+  function refreshItemSelects() {
+    document.querySelectorAll(".borrow-item-book").forEach(function (select) {
+      var current = select.value;
+      select.innerHTML = '<option value="">— Chọn sách —</option>';
+      availableBooks.forEach(function (book) {
+        var option = document.createElement("option");
+        option.value = book.ma;
+        option.textContent = book.ma + " — " + book.ten + " (còn " + book.soLuong + ")";
+        select.appendChild(option);
+      });
+      select.value = current;
+    });
+  }
 
-  var itemIndex = 0;
+  function loadBooksCon() {
+    var built = API.buildQuery("books", { trangThai: "con" });
+    API.call("books", undefined, "GET", undefined, built.query)
+      .then(function (res) {
+        if (!res.ok) {
+          showMessage(res.message);
+          return;
+        }
+        availableBooks = (res.data || []).map(function (item) {
+          return API.mapResponse("book", item) || item;
+        });
+        refreshItemSelects();
+      })
+      .catch(function () {
+        showMessage("Đã xảy ra lỗi khi tải danh sách sách còn.");
+      });
+  }
 
-  function addBorrowItem() {
-    itemIndex++;
+  function addItemRow() {
     var container = document.getElementById("borrow-items");
     var row = document.createElement("div");
-    row.className = "form-grid";
-    row.dataset.idx = itemIndex;
-    row.style.cssText = "align-items:center; margin-bottom:0.5rem; gap:0.5rem;";
+    row.className = "borrow-item-row";
 
-    var maInput = document.createElement("input");
-    maInput.type = "text";
-    maInput.placeholder = "Mã sách (VD: CNKT0009)";
-    maInput.maxLength = 20;
-    maInput.className = "borrow-item-ma";
-    maInput.id = "item-ma-" + itemIndex;
+    var bookGroup = document.createElement("div");
+    bookGroup.className = "form-group borrow-item-book-group";
+    var bookLabel = document.createElement("label");
+    bookLabel.textContent = "Sách";
+    var bookSelect = document.createElement("select");
+    bookSelect.className = "borrow-item-book";
+    bookSelect.innerHTML = '<option value="">— Chọn sách —</option>';
+    availableBooks.forEach(function (book) {
+      var option = document.createElement("option");
+      option.value = book.ma;
+      option.textContent = book.ma + " — " + book.ten + " (còn " + book.soLuong + ")";
+      bookSelect.appendChild(option);
+    });
+    bookGroup.appendChild(bookLabel);
+    bookGroup.appendChild(bookSelect);
+
+    var qtyGroup = document.createElement("div");
+    qtyGroup.className = "form-group borrow-item-qty-group";
+    var qtyLabel = document.createElement("label");
+    qtyLabel.textContent = "Số lượng";
+    var qtyInput = document.createElement("input");
+    qtyInput.type = "number";
+    qtyInput.min = "1";
+    qtyInput.value = "1";
+    qtyGroup.appendChild(qtyLabel);
+    qtyGroup.appendChild(qtyInput);
 
     var removeBtn = document.createElement("button");
     removeBtn.type = "button";
     removeBtn.className = "btn btn-danger";
-    removeBtn.textContent = "✕";
-    removeBtn.style.cssText = "padding:0.4rem 0.7rem; min-width:unset;";
+    removeBtn.textContent = "Xoá dòng";
     removeBtn.addEventListener("click", function () {
-      container.removeChild(row);
+      row.remove();
     });
 
-    row.appendChild(maInput);
+    row.appendChild(bookGroup);
+    row.appendChild(qtyGroup);
     row.appendChild(removeBtn);
     container.appendChild(row);
-    maInput.focus();
   }
 
-  function getItems() {
-    var inputs = document.querySelectorAll(".borrow-item-ma");
-    var items = [];
-    inputs.forEach(function (input) {
-      var ma = (input.value || "").trim();
-      if (ma) items.push({ ma_sach: ma, so_luong: 1 });
-    });
-    return items;
-  }
-
-  // ── Tạo phiếu mượn mới ──────────────────────────────────────────────────
-
-  function submitBorrow() {
-    var maPhieu = (document.getElementById("borrow-ma-phieu").value || "").trim();
-    var maDocGia = (document.getElementById("borrow-ma-doc-gia").value || "").trim();
-    var soNgayEl = document.getElementById("borrow-so-ngay");
-    var soNgay = soNgayEl ? soNgayEl.value : "";
-    var items = getItems();
-
-    if (!maPhieu) { showMessage("Vui lòng nhập mã phiếu mượn."); return; }
-    if (!maDocGia) { showMessage("Vui lòng nhập mã độc giả."); return; }
-    if (items.length === 0) { showMessage("Vui lòng thêm ít nhất 1 cuốn sách."); return; }
-
-    var body = { ma_phieu: maPhieu, ma_doc_gia: maDocGia, items: items };
-    if (soNgay) body.so_ngay_muon = parseInt(soNgay, 10);
-
-    setLoading(true);
-    API.call("createBorrow", null, "POST", body)
-      .then(function (res) {
-        setLoading(false);
-        if (!res.ok) { showMessage("Lỗi tạo phiếu: " + res.message); return; }
-        showMessage("Đã tạo phiếu mượn " + maPhieu + " thành công.", "alert-success");
-        document.getElementById("borrow-ma-phieu").value = "";
-        document.getElementById("borrow-ma-doc-gia").value = "";
-        document.getElementById("borrow-items").innerHTML = "";
-        itemIndex = 0;
-        addBorrowItem();
-        loadBorrows();
-      })
-      .catch(function () {
-        setLoading(false);
-        showMessage("Đã xảy ra lỗi kết nối khi tạo phiếu mượn.");
-      });
-  }
-
-  // ── Load & render danh sách phiếu ─────────────────────────────────────────
-
-  function loadBorrows() {
-    var docGia = (document.getElementById("filter-doc-gia").value || "").trim();
-    var trangThai = document.getElementById("filter-trang-thai").value;
-    var params = {};
-    if (docGia) params.docGia = docGia;
-    if (trangThai) params.trangThai = trangThai;
-
-    setLoading(true);
-    API.call("borrows", params, "GET")
-      .then(function (res) {
-        setLoading(false);
-        if (!res.ok) { showMessage("Lỗi tải danh sách: " + res.message); return; }
-        renderBorrows(res.data || []);
-      })
-      .catch(function () {
-        setLoading(false);
-        showMessage("Đã xảy ra lỗi kết nối.");
-      });
-  }
-
-  function renderBorrows(list) {
-    var tbody = document.getElementById("borrows-tbody");
-    tbody.innerHTML = "";
-    if (!list.length) {
-      var tr = document.createElement("tr");
-      var td = document.createElement("td");
-      td.colSpan = 10; td.className = "empty-row";
-      td.textContent = "Không có phiếu mượn nào.";
-      tr.appendChild(td); tbody.appendChild(tr);
+  function createBorrow() {
+    var maPhieu = document.getElementById("borrow-ma-phieu").value.trim();
+    var maDocGia = document.getElementById("borrow-reader").value;
+    if (!maPhieu) {
+      showMessage("Vui lòng nhập mã phiếu mượn.");
+      return;
+    }
+    if (!maDocGia) {
+      showMessage("Vui lòng chọn độc giả.");
       return;
     }
 
-    list.forEach(function (raw) {
-      var slip = API.mapResponse("borrowSlipOut", raw) || raw;
-      var fines = raw.fines || [];
-      var tr = document.createElement("tr");
-      var maPhieu = slip.maPhieu || raw.ma_phieu;
-      var trangThai = slip.trangThai || raw.trang_thai;
-      var soLanGiaHan = (slip.soLanGiaHan != null) ? slip.soLanGiaHan : (raw.so_lan_gia_han || 0);
-      var hanTra = slip.hanTra || raw.han_tra;
-
-      if (trangThai === "dang_muon" && isOverdue(hanTra)) {
-        tr.style.background = "rgba(239,68,68,0.08)";
+    var items = [];
+    var rows = document.querySelectorAll(".borrow-item-row");
+    rows.forEach(function (row) {
+      var maSach = row.querySelector(".borrow-item-book").value;
+      var soLuong = parseInt(row.querySelector(".borrow-item-qty-group input").value, 10);
+      if (maSach && soLuong >= 1) {
+        items.push({ ma_sach: maSach, so_luong: soLuong });
       }
+    });
+    if (items.length === 0) {
+      showMessage("Vui lòng chọn ít nhất 1 sách với số lượng hợp lệ.");
+      return;
+    }
 
-      var sachText = (raw.details || []).map(function (d) {
-        var det = API.mapResponse("borrowDetailOut", d) || d;
-        return (det.tenSach || det.ten_sach || det.maSach || det.ma_sach || "?")
-          + " [" + (det.copyId || det.copy_id || "—") + "]";
-      }).join("; ") || "—";
+    var payload = {
+      ma_phieu: maPhieu,
+      ma_doc_gia: maDocGia,
+      so_ngay_muon: parseInt(document.getElementById("borrow-so-ngay").value, 10),
+      items: items
+    };
+    if (!payload.so_ngay_muon || payload.so_ngay_muon < 1) {
+      showMessage("Vui lòng nhập số ngày mượn hợp lệ (>= 1).");
+      return;
+    }
 
-      var phatText = fines.length ? fines.map(function (f) {
-        var fi = API.mapResponse("fineOut", f) || f;
-        var daThu = f.da_thu || f.daThu;
-        var soTien = fi.soTien || f.so_tien || 0;
-        var soDiem = fi.soDiem || f.so_diem || 0;
-        var amt = soTien > 0
-          ? Number(soTien).toLocaleString("vi-VN") + " VNĐ"
-          : soDiem + " điểm";
-        return amt + (daThu ? " ✓" : " (chưa thu)");
-      }).join("; ") : "—";
+    API.call("createBorrow", payload, "POST")
+      .then(function (res) {
+        if (!res.ok) {
+          showMessage(res.message);
+          return;
+        }
+        showMessage("Đã lập phiếu mượn " + maPhieu + ".", "alert-success");
+        document.getElementById("borrow-ma-phieu").value = "";
+        document.querySelectorAll(".borrow-item-row:not(:first-child)").forEach(function (r) {
+          r.remove();
+        });
+        var firstBook = document.querySelector(".borrow-item-book");
+        var firstQty = document.querySelector(".borrow-item-qty-group input");
+        if (firstBook) {
+          firstBook.value = "";
+        }
+        if (firstQty) {
+          firstQty.value = "1";
+        }
+        loadBooksCon();
+        loadActiveBorrows();
+      })
+      .catch(function () {
+        showMessage("Đã xảy ra lỗi không xác định khi lập phiếu mượn.");
+      });
+  }
 
-      var statusLabel = trangThai === "dang_muon"
-        ? (isOverdue(hanTra) ? "⚠ Quá hạn" : "Đang mượn")
-        : "Đã trả";
+  function loadActiveBorrows() {
+    var built = API.buildQuery("borrows", { trangThai: "dang_muon" });
+    API.call("borrows", undefined, "GET", undefined, built.query)
+      .then(function (res) {
+        if (!res.ok) {
+          showMessage(res.message);
+          return;
+        }
+        renderActive(res.data || []);
+      })
+      .catch(function () {
+        showMessage("Đã xảy ra lỗi khi tải danh sách phiếu mượn.");
+      });
+  }
 
-      var cells = [
-        maPhieu,
-        slip.maDocGia || raw.ma_doc_gia,
-        sachText,
-        fmtDate(slip.ngayMuon || raw.ngay_muon),
-        fmtDate(hanTra),
-        fmtDate(slip.ngayTra || raw.ngay_tra),
-        soLanGiaHan + "/1",
-        statusLabel,
-        phatText
-      ];
-      cells.forEach(function (val) {
+  function renderActive(list) {
+    var tbody = document.getElementById("active-borrow-tbody");
+    tbody.innerHTML = "";
+    if (list.length === 0) {
+      var emptyRow = document.createElement("tr");
+      var emptyCell = document.createElement("td");
+      emptyCell.className = "empty-row";
+      emptyCell.colSpan = 7;
+      emptyCell.textContent = "Không có phiếu mượn nào đang mượn.";
+      emptyRow.appendChild(emptyCell);
+      tbody.appendChild(emptyRow);
+      return;
+    }
+    list.forEach(function (item) {
+      var slip = API.mapResponse("borrowSlipOut", item);
+      if (!slip) {
+        return;
+      }
+      tbody.appendChild(slipRow(slip));
+    });
+  }
+
+  function slipRow(slip) {
+    var tr = document.createElement("tr");
+    var detailsText = (slip.details || [])
+      .map(function (d) {
+        var detail = API.mapResponse("borrowDetailOut", d);
+        if (!detail) return "";
+        var text = (detail.tenSach || detail.maSach) + " x" + detail.soLuong;
+        if (detail.copyId) {
+          text += " (Mã bản: " + detail.copyId + ")";
+        }
+        return text;
+      })
+      .filter(Boolean)
+      .join(", ");
+
+    var values = [
+      slip.maPhieu,
+      slip.maDocGia,
+      slip.ngayMuon ? new Date(slip.ngayMuon).toLocaleString("vi-VN") : "—",
+      slip.hanTra ? new Date(slip.hanTra).toLocaleString("vi-VN") : "—",
+      String(slip.soLanGiaHan || 0) + "/1",
+      detailsText
+    ];
+    values.forEach(function (value) {
+      var td = document.createElement("td");
+      td.textContent = value || "—";
+      tr.appendChild(td);
+    });
+
+    var actionsTd = document.createElement("td");
+    var actions = document.createElement("div");
+    actions.className = "row-actions";
+
+    if (Number(slip.soLanGiaHan) < 1) {
+      var renewBtn = document.createElement("button");
+      renewBtn.type = "button";
+      renewBtn.className = "btn btn-secondary";
+      renewBtn.textContent = "Gia hạn";
+      renewBtn.addEventListener("click", function () {
+        renewSlip(slip);
+      });
+      actions.appendChild(renewBtn);
+    }
+
+    var returnBtn = document.createElement("button");
+    returnBtn.type = "button";
+    returnBtn.className = "btn btn-primary";
+    returnBtn.textContent = "Trả sách";
+    returnBtn.addEventListener("click", function () {
+      returnSlip(slip);
+    });
+    actions.appendChild(returnBtn);
+
+    actionsTd.appendChild(actions);
+    tr.appendChild(actionsTd);
+    return tr;
+  }
+
+  function returnSlip(slip) {
+    API.call("returnBorrow", undefined, "PUT", { ma: slip.maPhieu })
+      .then(function (res) {
+        if (!res.ok) {
+          showMessage(res.message);
+          return;
+        }
+        var mapped = API.mapResponse("borrowReturnOut", res.data);
+        var text = mapped && mapped.message ? mapped.message : "Đã trả sách.";
+        var fine = mapped && mapped.fine ? API.mapResponse("fineOut", mapped.fine) : null;
+        if (fine && Number(fine.soNgayQuaHan) > 0) {
+          var fineText = Number(fine.soTien) > 0
+            ? Number(fine.soTien).toLocaleString("vi-VN") + " VNĐ"
+            : fine.soDiem + " điểm";
+          text += " — Quá hạn " + fine.soNgayQuaHan + " ngày, phạt " + fineText + ".";
+        }
+        showMessage(text, "alert-success");
+        loadActiveBorrows();
+        loadBooksCon();
+        loadFines();
+      })
+      .catch(function () {
+        showMessage("Đã xảy ra lỗi không xác định khi trả sách.");
+      });
+  }
+
+  function renewSlip(slip) {
+    API.call("renewBorrow", undefined, "PUT", { ma: slip.maPhieu })
+      .then(function (res) {
+        if (!res.ok) {
+          showMessage(res.message);
+          return;
+        }
+        var mapped = API.mapResponse("borrowRenewOut", res.data);
+        var text = mapped && mapped.message ? mapped.message : "Đã gia hạn phiếu mượn.";
+        if (mapped && mapped.hanTraMoi) {
+          text += " Hạn trả mới: " + new Date(mapped.hanTraMoi).toLocaleString("vi-VN");
+        }
+        var fine = mapped && mapped.fine ? API.mapResponse("fineOut", mapped.fine) : null;
+        if (fine && Number(fine.soNgayQuaHan) > 0) {
+          var fineText = Number(fine.soTien) > 0
+            ? Number(fine.soTien).toLocaleString("vi-VN") + " VNĐ"
+            : fine.soDiem + " điểm";
+          text += " (phạt quá hạn " + fine.soNgayQuaHan + " ngày: " + fineText + ")";
+        }
+        showMessage(text, "alert-success");
+        loadActiveBorrows();
+        loadBooksCon();
+        loadFines();
+      })
+      .catch(function () {
+        showMessage("Đã xảy ra lỗi không xác định khi gia hạn phiếu mượn.");
+      });
+  }
+
+  function loadFines() {
+    var banner = document.getElementById("fine-banner");
+    if (banner) {
+      banner.hidden = true;
+    }
+    API.call("borrows", undefined, "GET", undefined, { trangThai: "da_tra" })
+      .then(function (res) {
+        if (!res.ok) {
+          showMessage(res.message);
+          return;
+        }
+        finesList = [];
+        (res.data || []).forEach(function (slip) {
+          (slip.fines || []).forEach(function (f) {
+            if (!f.da_thu) {
+              finesList.push({
+                ma_phieu: slip.ma_phieu,
+                ma_doc_gia: slip.ma_doc_gia,
+                so_ngay_qua_han: f.so_ngay_qua_han,
+                so_diem: f.so_diem || 0,
+                so_tien: f.so_tien || 0
+              });
+            }
+          });
+        });
+        renderFines();
+      })
+      .catch(function () {
+        showMessage("Đã xảy ra lỗi khi tải danh sách phạt.");
+      });
+  }
+
+  function renderFines() {
+    var tbody = document.getElementById("fine-tbody");
+    tbody.innerHTML = "";
+    if (finesList.length === 0) {
+      var emptyRow = document.createElement("tr");
+      var emptyCell = document.createElement("td");
+      emptyCell.className = "empty-row";
+      emptyCell.colSpan = 5;
+      emptyCell.textContent = "Không có khoản phạt chưa thu.";
+      emptyRow.appendChild(emptyCell);
+      tbody.appendChild(emptyRow);
+      return;
+    }
+    finesList.forEach(function (f) {
+      var tr = document.createElement("tr");
+      var mucPhat = f.so_tien > 0
+        ? Number(f.so_tien).toLocaleString("vi-VN") + " VNĐ"
+        : f.so_diem + " điểm";
+      var values = [f.ma_phieu, f.ma_doc_gia, f.so_ngay_qua_han, mucPhat];
+      values.forEach(function (v) {
         var td = document.createElement("td");
-        td.textContent = val;
-        if (val === "⚠ Quá hạn") td.style.color = "#dc2626";
-        if (val === "Đã trả") td.style.color = "#16a34a";
+        td.textContent = v;
         tr.appendChild(td);
       });
-
-      // Cột thao tác
-      var actionsTd = document.createElement("td");
-      var actions = document.createElement("div");
-      actions.className = "row-actions";
-
-      if (trangThai === "dang_muon") {
-        var retBtn = document.createElement("button");
-        retBtn.type = "button"; retBtn.className = "btn btn-primary";
-        retBtn.textContent = "Trả sách";
-        retBtn.addEventListener("click", (function (ma) {
-          return function () { doReturn(ma); };
-        })(maPhieu));
-        actions.appendChild(retBtn);
-
-        if (soLanGiaHan < 1) {
-          var renBtn = document.createElement("button");
-          renBtn.type = "button"; renBtn.className = "btn btn-secondary";
-          renBtn.textContent = "Gia hạn";
-          renBtn.addEventListener("click", (function (ma) {
-            return function () { openRenewModal(ma); };
-          })(maPhieu));
-          actions.appendChild(renBtn);
-        }
-      }
-
-      var hasPending = fines.some(function (f) { return !(f.da_thu || f.daThu); });
-      if (trangThai === "da_tra" && hasPending) {
-        var fineBtn = document.createElement("button");
-        fineBtn.type = "button"; fineBtn.className = "btn btn-danger";
-        fineBtn.textContent = "Thu phạt";
-        fineBtn.addEventListener("click", (function (ma, fs) {
-          return function () { openFineModal(ma, fs); };
-        })(maPhieu, fines));
-        actions.appendChild(fineBtn);
-      }
-
-      if (!actions.children.length) actionsTd.textContent = "—";
-      else actionsTd.appendChild(actions);
-      tr.appendChild(actionsTd);
+      var td = document.createElement("td");
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn btn-primary";
+      btn.textContent = "\u0110\u00e3 thu";
+      btn.addEventListener("click", function () {
+        collectFine(f);
+      });
+      td.appendChild(btn);
+      tr.appendChild(td);
       tbody.appendChild(tr);
     });
   }
 
-  // ── Trả sách ─────────────────────────────────────────────────────────────
-
-  function doReturn(maPhieu) {
-    if (!confirm('Xác nhận trả sách cho phiếu "' + maPhieu + '"?')) return;
-    setLoading(true);
-    API.call("returnBorrow", null, "PUT", null, { ma: maPhieu })
+  function collectFine(f) {
+    API.call("collectFine", undefined, "POST", { ma: f.ma_phieu })
       .then(function (res) {
-        setLoading(false);
-        if (!res.ok) { showMessage("Lỗi trả sách: " + res.message); return; }
-        var data = res.data || {};
-        var extra = "";
-        if (data.fine) {
-          var soTien = data.fine.so_tien || 0;
-          var soDiem = data.fine.so_diem || 0;
-          if (soTien > 0) extra = " | Phạt: " + Number(soTien).toLocaleString("vi-VN") + " VNĐ";
-          else if (soDiem > 0) extra = " | Phạt: " + soDiem + " điểm SVNET";
+        if (!res.ok) {
+          showMessage(
+            res.status === 404 || res.status === 405 || res.code === "API_CHUA_CO_TAI_LIEU"
+              ? "Backend chưa hỗ trợ thu phạt (cần API POST /api/borrows/{ma}/collect-fine)."
+              : res.message
+          );
+          return;
         }
-        showMessage("Đã trả sách phiếu " + maPhieu + "." + extra, "alert-success");
-        loadBorrows();
+        var mapped = API.mapResponse("collectFineOut", res.data);
+        var text = "Đã thu phạt phiếu " + f.ma_phieu + ".";
+        if (res.data && res.data.so_tien_da_thu > 0) {
+          text += " Thu " + Number(res.data.so_tien_da_thu).toLocaleString("vi-VN") + " VNĐ.";
+        } else if (mapped && mapped.soDiemDaThu > 0) {
+          text +=
+            " Trừ " + mapped.soDiemDaThu + " điểm, điểm còn lại " + mapped.diemConLai + ".";
+        }
+        showMessage(text, "alert-success");
+        finesList = finesList.filter(function (x) {
+          return x.ma_phieu !== f.ma_phieu;
+        });
+        renderFines();
       })
-      .catch(function () { setLoading(false); showMessage("Lỗi khi trả sách."); });
+      .catch(function () {
+        showMessage("Đã xảy ra lỗi khi thu phạt.");
+      });
   }
 
-  // ── Modal gia hạn ─────────────────────────────────────────────────────────
-
-  var pendingRenewMa = null;
-  function openRenewModal(maPhieu) {
-    pendingRenewMa = maPhieu;
-    document.getElementById("renew-modal-phieu").textContent = maPhieu;
-    document.getElementById("renew-modal").hidden = false;
-  }
-  function closeRenewModal() {
-    document.getElementById("renew-modal").hidden = true;
-    pendingRenewMa = null;
-  }
-  function confirmRenew() {
-    if (!pendingRenewMa) return;
-    var ma = pendingRenewMa;
-    closeRenewModal();
-    setLoading(true);
-    API.call("renewBorrow", null, "PUT", null, { ma: ma })
-      .then(function (res) {
-        setLoading(false);
-        if (!res.ok) { showMessage("Lỗi gia hạn: " + res.message); return; }
-        var d = res.data || {};
-        var hanMoi = d.han_tra_moi ? " → Hạn mới: " + fmtDate(d.han_tra_moi) : "";
-        showMessage("Đã gia hạn phiếu " + ma + hanMoi + ".", "alert-success");
-        loadBorrows();
-      })
-      .catch(function () { setLoading(false); showMessage("Lỗi khi gia hạn."); });
-  }
-
-  // ── Modal thu phạt ────────────────────────────────────────────────────────
-
-  var pendingFineMa = null;
-  function openFineModal(maPhieu, fines) {
-    pendingFineMa = maPhieu;
-    document.getElementById("fine-modal-phieu").textContent = maPhieu;
-    var totalNgay = fines.reduce(function (s, f) { return s + (f.so_ngay_qua_han || 0); }, 0);
-    var totalTien = fines.reduce(function (s, f) { return s + (f.so_tien || 0); }, 0);
-    var totalDiem = fines.reduce(function (s, f) { return s + (f.so_diem || 0); }, 0);
-    var info = "Quá hạn " + totalNgay + " ngày. ";
-    info += totalTien > 0
-      ? "Tiền phạt: " + Number(totalTien).toLocaleString("vi-VN") + " VNĐ (giảng viên)."
-      : "Điểm cần trừ: " + totalDiem + " điểm SVNET.";
-    document.getElementById("fine-modal-info").textContent = info;
-    document.getElementById("fine-modal").hidden = false;
-  }
-  function closeFineModal() {
-    document.getElementById("fine-modal").hidden = true;
-    pendingFineMa = null;
-  }
-  function confirmFine() {
-    if (!pendingFineMa) return;
-    var ma = pendingFineMa;
-    closeFineModal();
-    setLoading(true);
-    API.call("collectFine", null, "POST", null, { ma: ma })
-      .then(function (res) {
-        setLoading(false);
-        if (!res.ok) { showMessage("Lỗi thu phạt: " + res.message); return; }
-        var d = res.data || {};
-        var msg = d.message || "Đã thu phạt.";
-        if (d.so_tien_da_thu > 0)
-          msg += " | " + Number(d.so_tien_da_thu).toLocaleString("vi-VN") + " VNĐ.";
-        else if (d.so_diem_da_thu > 0)
-          msg += " | Trừ " + d.so_diem_da_thu + " điểm. Còn: " + d.diem_con_lai + " điểm.";
-        showMessage(msg, "alert-success");
-        loadBorrows();
-      })
-      .catch(function () { setLoading(false); showMessage("Lỗi khi thu phạt."); });
-  }
-
-  // ── Khởi động ────────────────────────────────────────────────────────────
-
-  document.addEventListener("DOMContentLoaded", function () {
-    if (!Auth.requireLibrarian()) return;
+  function init() {
+    if (!Auth.requireLibrarian()) {
+      return;
+    }
     Auth.applyRoleUI();
 
-    document.getElementById("add-borrow-item").addEventListener("click", addBorrowItem);
-    addBorrowItem(); // Thêm 1 dòng mặc định
+    document.getElementById("add-borrow-item").addEventListener("click", addItemRow);
+    document.getElementById("create-borrow-button").addEventListener("click", createBorrow);
+    loadFines();
 
-    document.getElementById("submit-borrow").addEventListener("click", submitBorrow);
+    loadReaders();
+    loadLibraryConfig();
+    loadBooksCon();
+    loadActiveBorrows();
+    addItemRow();
+  }
 
-    document.getElementById("filter-btn").addEventListener("click", loadBorrows);
-    document.getElementById("refresh-btn").addEventListener("click", function () {
-      document.getElementById("filter-doc-gia").value = "";
-      document.getElementById("filter-trang-thai").value = "";
-      loadBorrows();
-    });
-    document.getElementById("filter-doc-gia").addEventListener("keydown", function (e) {
-      if (e.key === "Enter") loadBorrows();
-    });
-
-    // Modals
-    document.getElementById("renew-modal-cancel").addEventListener("click", closeRenewModal);
-    document.getElementById("renew-modal-confirm").addEventListener("click", confirmRenew);
-    document.getElementById("renew-modal").addEventListener("click", function (e) {
-      if (e.target === this) closeRenewModal();
-    });
-    document.getElementById("fine-modal-cancel").addEventListener("click", closeFineModal);
-    document.getElementById("fine-modal-confirm").addEventListener("click", confirmFine);
-    document.getElementById("fine-modal").addEventListener("click", function (e) {
-      if (e.target === this) closeFineModal();
-    });
-
-    // Load ban đầu — hiển thị phiếu đang mượn
-    document.getElementById("filter-trang-thai").value = "dang_muon";
-    loadBorrows();
-  });
+  document.addEventListener("DOMContentLoaded", init);
 })();
-

@@ -103,6 +103,7 @@ def _slip_out(db: Session, slip: BorrowSlip) -> BorrowSlipOut:
             FineOut(
                 so_ngay_qua_han=fine.so_ngay_qua_han,
                 so_diem=fine.so_diem,
+                so_tien=fine.so_tien,
                 da_thu=fine.da_thu,
                 ngay_thu=fine.ngay_thu,
             )
@@ -312,18 +313,28 @@ def _perform_return_borrow(db: Session, user, ma: str) -> BorrowReturnOut:
     fine = None
     days = _overdue_days(slip.han_tra, ngay_tra)
     if days > 0:
-        points = days * cfg.overdue_fine_points_per_day
+        reader = db.get(Reader, slip.ma_doc_gia)
+        is_giang_vien = reader is not None and reader.loaiDocGia == "giang_vien"
+        if is_giang_vien:
+            so_tien = days * cfg.overdue_fine_vnd_per_day_lecturer
+            so_diem = 0
+            audit_detail = f"quá hạn {days} ngày, phạt giảng viên {so_tien} VNĐ"
+        else:
+            so_diem = days * cfg.overdue_fine_points_per_day
+            so_tien = 0
+            audit_detail = f"quá hạn {days} ngày, phạt sinh viên {so_diem} điểm"
+
         db.add(
             FineHistory(
                 ma_phieu=ma,
                 ma_doc_gia=slip.ma_doc_gia,
                 so_ngay_qua_han=days,
-                so_diem=points,
+                so_diem=so_diem,
+                so_tien=so_tien,
                 ngay_tinh=ngay_tra,
             )
         )
-        fine = FineOut(so_ngay_qua_han=days, so_diem=points)
-        audit_detail = f"quá hạn {days} ngày, phạt {points} điểm"
+        fine = FineOut(so_ngay_qua_han=days, so_diem=so_diem, so_tien=so_tien)
     else:
         audit_detail = "không quá hạn"
 
@@ -382,17 +393,26 @@ def _perform_renew_borrow(db: Session, user, ma: str) -> BorrowRenewOut:
     fine = None
     days = _overdue_days(slip.han_tra, now)
     if days > 0:
-        points = days * cfg.overdue_fine_points_per_day
+        reader = db.get(Reader, slip.ma_doc_gia)
+        is_giang_vien = reader is not None and reader.loaiDocGia == "giang_vien"
+        if is_giang_vien:
+            so_tien = days * cfg.overdue_fine_vnd_per_day_lecturer
+            so_diem = 0
+        else:
+            so_diem = days * cfg.overdue_fine_points_per_day
+            so_tien = 0
+
         db.add(
             FineHistory(
                 ma_phieu=ma,
                 ma_doc_gia=slip.ma_doc_gia,
                 so_ngay_qua_han=days,
-                so_diem=points,
+                so_diem=so_diem,
+                so_tien=so_tien,
                 ngay_tinh=now,
             )
         )
-        fine = FineOut(so_ngay_qua_han=days, so_diem=points)
+        fine = FineOut(so_ngay_qua_han=days, so_diem=so_diem, so_tien=so_tien)
 
     slip.han_tra = slip.han_tra + timedelta(days=cfg.max_borrow_days)
     slip.so_lan_gia_han += 1
@@ -598,25 +618,38 @@ def collect_fine(
     reader = db.get(Reader, slip.ma_doc_gia)
     total_days = sum(fine.so_ngay_qua_han for fine in fines)
     so_diem_da_thu = sum(fine.so_diem for fine in fines)
+    so_tien_da_thu = sum(fine.so_tien for fine in fines)
     diem_con_lai = reader.diem_svnet if reader is not None else 0
-    if reader is not None:
+    if reader is not None and reader.loaiDocGia != "giang_vien":
         diem_con_lai = max(0, reader.diem_svnet - so_diem_da_thu)
         reader.diem_svnet = diem_con_lai
     for fine in fines:
         fine.da_thu = True
         fine.ngay_thu = ngay_thu
+    details_str = (
+        f"so_ngay_qua_han={total_days}; "
+        f"so_diem_da_thu={so_diem_da_thu}; "
+        f"so_tien_da_thu={so_tien_da_thu}; "
+        f"diem_con_lai={diem_con_lai}"
+    )
     write_audit_log(
         db,
         user,
         "COLLECT_FINE",
         "FINE",
         entity_id=ma,
-        details=f"so_ngay_qua_han={total_days}; so_diem_da_thu={so_diem_da_thu}; diem_con_lai={diem_con_lai}",
+        details=details_str,
     )
     db.commit()
+    msg = (
+        f"Đã thu tiền phạt {so_tien_da_thu:,.0f} VNĐ."
+        if so_tien_da_thu > 0
+        else "Đã trừ điểm SVNET."
+    )
     return CollectFineOut(
-        message="Đã trừ điểm SVNET.",
+        message=msg,
         so_diem_da_thu=so_diem_da_thu,
+        so_tien_da_thu=so_tien_da_thu,
         diem_con_lai=diem_con_lai,
         ngay_thu=ngay_thu,
     )

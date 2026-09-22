@@ -249,7 +249,22 @@ window.API = (function () {
       libraryConfig: {
         maxBorrowDays: "max_borrow_days",
         overdueFinePointsPerDay: "overdue_fine_points_per_day",
+        overdueFineVndPerDayLecturer: "overdue_fine_vnd_per_day_lecturer",
         maxBooksAtOnce: "max_books_at_once"
+      },
+      collectFineOut: {
+        message: "message",
+        soDiemDaThu: "so_diem_da_thu",
+        soTienDaThu: "so_tien_da_thu",
+        diemConLai: "diem_con_lai",
+        ngayThu: "ngay_thu"
+      },
+      fineOut: {
+        soNgayQuaHan: "so_ngay_qua_han",
+        soDiem: "so_diem",
+        soTien: "so_tien",
+        daThu: "da_thu",
+        ngayThu: "ngay_thu"
       },
       reservationCreate: {
         maSach: "ma_sach",
