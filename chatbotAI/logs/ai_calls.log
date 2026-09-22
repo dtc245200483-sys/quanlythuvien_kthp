@@ -881,3 +881,98 @@
 [2026-09-16 03:48:05] [RAG_RETRIEVER] 'Chiến tranh và Hòa bình' → 1/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.9957, la_lac_de=True)
 [2026-09-16 03:48:10] [LLM] [deepseek/deepseek-chat] [SUCCESS] [5455ms] [3699 chars] Response: 515 chars
 [2026-09-16 03:48:10] [CHATBOT_SERVICE] 'Chiến tranh và Hòa bình' → chế độ tên sách, loại bỏ 0 sách khớp yếu (diem_khop_ten < 75%), dùng thông báo cụ thể về sách chưa có trong kho.
+[2026-09-16 04:47:03] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-16 04:47:03] [VECTORSTORE] [COUNT] Tổng số sách đã index: 63
+[2026-09-16 04:47:56] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-16 04:47:56] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [120ms] [518 chars] → 384-dim vector
+[2026-09-16 04:47:56] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [167ms] | embed từ: tom_tat
+[2026-09-16 04:47:56] [VS_SYNC] UPSERT '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' (con_hang=True)
+[2026-09-16 04:48:01] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-16 04:48:01] [VECTORSTORE] [COUNT] Tổng số sách đã index: 63
+[2026-09-16 04:51:54] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-16 04:51:54] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [45ms] [102 chars] → 384-dim vector
+[2026-09-16 04:51:54] [VECTORSTORE] [UPSERT] 'QBRQ555074700' — 'ai biết' [75ms] | embed từ: tom_tat
+[2026-09-16 04:51:54] [VS_SYNC] UPSERT 'QBRQ555074700' — 'ai biết' (con_hang=True)
+[2026-09-16 04:52:07] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 64 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-16 04:52:07] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [23ms] [4 chars] → 384-dim vector
+[2026-09-16 04:52:07] [VECTORSTORE] [SEARCH] 'hung' → 10 kết quả [27ms] | Top-1: ai biết (0.6496)
+[2026-09-16 04:52:07] [RAG_RETRIEVER] 'hung' → 8/29 sách đạt ngưỡng 0.35 (max_score_truoc_loc=1.3000, la_lac_de=False)
+[2026-09-16 04:52:12] [LLM] [deepseek/deepseek-chat] [SUCCESS] [5003ms] [4950 chars] Response: 380 chars
+[2026-09-16 04:52:23] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 64 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-16 04:52:23] [VECTORSTORE] [DELETE] Đã xóa sách 'QBRQ555074700'.
+[2026-09-16 04:52:23] [VS_SYNC] DELETE 'QBRQ555074700' — 'ai biết'
+[2026-09-16 04:52:39] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-16 04:52:39] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [32ms] [57 chars] → 384-dim vector
+[2026-09-16 04:52:39] [VECTORSTORE] [SEARCH] 'gợi ý những cuốn sách hay và đáng đọc nhất trong t' → 10 kết quả [35ms] | Top-1: 50 Cuốn Sách Kinh Điển Về Kinh (0.7631)
+[2026-09-16 04:52:39] [RAG_RETRIEVER] 'gợi ý những cuốn sách hay và đáng đọc nhất trong t' → 8/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.9111, la_lac_de=False)
+[2026-09-16 04:52:59] [LLM] [deepseek/deepseek-chat] [SUCCESS] [20125ms] [5383 chars] Response: 1103 chars
+[2026-09-22 09:40:31] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:41:19] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-09-22 09:41:31] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [12182ms] Model sẵn sàng.
+[2026-09-22 09:41:32] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [201ms] [22 chars] → 384-dim vector
+[2026-09-22 09:41:32] [VECTORSTORE] [SEARCH] 'hôm nay ngày bao nhiêu' → 10 kết quả [60927ms] | Top-1: 7 Thói Quen Hiệu Quả - The 7 H (0.6291)
+[2026-09-22 09:41:32] [RAG_RETRIEVER] 'hôm nay ngày bao nhiêu' → 0/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.2582, la_lac_de=False)
+[2026-09-22 09:41:32] [CHATBOT_SERVICE] 'hôm nay ngày bao nhiêu' → đã chặn ở tầng retrieval, không tốn API call (không có sách phù hợp trong thư viện (điểm cao nhất 0.2582 nằm trong [0.15, 0.35]))
+[2026-09-22 09:47:05] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:47:05] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [58ms] [33 chars] → 384-dim vector
+[2026-09-22 09:47:05] [VECTORSTORE] [SEARCH] 'tìm sách có nội dung  50 tác phẩm' → 10 kết quả [61ms] | Top-1: 50 Cuốn Sách Kinh Điển Về Kinh (0.8065)
+[2026-09-22 09:47:05] [RAG_RETRIEVER] 'tìm sách có nội dung  50 tác phẩm' → 7/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.6130, la_lac_de=False)
+[2026-09-22 09:47:21] [LLM] [deepseek/deepseek-chat] [SUCCESS] [15900ms] [5326 chars] Response: 450 chars
+[2026-09-22 09:52:25] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:35] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-09-22 09:52:45] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [10475ms] Model sẵn sàng.
+[2026-09-22 09:52:45] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [55ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:46] [VECTORSTORE] [UPSERT] 'TESTSTT1' — 'Sách TESTSTT1' [20719ms] | embed từ: ten_sach
+[2026-09-22 09:52:46] [VS_SYNC] UPSERT 'TESTSTT1' — 'Sách TESTSTT1' (con_hang=True)
+[2026-09-22 09:52:46] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 64 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:46] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [34ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:46] [VECTORSTORE] [UPSERT] 'TESTSTT2' — 'Sách TESTSTT2' [63ms] | embed từ: ten_sach
+[2026-09-22 09:52:46] [VS_SYNC] UPSERT 'TESTSTT2' — 'Sách TESTSTT2' (con_hang=True)
+[2026-09-22 09:52:46] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 65 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:46] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [29ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:46] [VECTORSTORE] [UPSERT] 'TESTSTT1' — 'Sách TESTSTT1' [89ms] | embed từ: ten_sach
+[2026-09-22 09:52:46] [VS_SYNC] CON_HANG UPDATE 'TESTSTT1' — soLuong=9 con_hang=True
+[2026-09-22 09:52:46] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 65 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:46] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [29ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:46] [VECTORSTORE] [UPSERT] 'TESTSTT1' — 'Sách TESTSTT1' [77ms] | embed từ: ten_sach
+[2026-09-22 09:52:46] [VS_SYNC] CON_HANG UPDATE 'TESTSTT1' — soLuong=8 con_hang=True
+[2026-09-22 09:52:46] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 65 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:46] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [27ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:46] [VECTORSTORE] [UPSERT] 'TESTSTT2' — 'Sách TESTSTT2' [74ms] | embed từ: ten_sach
+[2026-09-22 09:52:46] [VS_SYNC] CON_HANG UPDATE 'TESTSTT2' — soLuong=9 con_hang=True
+[2026-09-22 09:52:47] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 65 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:47] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [44ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:47] [VECTORSTORE] [UPSERT] 'TESTSTT3' — 'Sách TESTSTT3' [94ms] | embed từ: ten_sach
+[2026-09-22 09:52:47] [VS_SYNC] UPSERT 'TESTSTT3' — 'Sách TESTSTT3' (con_hang=True)
+[2026-09-22 09:52:47] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 66 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:47] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [36ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:47] [VECTORSTORE] [UPSERT] 'TESTSTT3' — 'Sách TESTSTT3' [93ms] | embed từ: ten_sach
+[2026-09-22 09:52:47] [VS_SYNC] CON_HANG UPDATE 'TESTSTT3' — soLuong=9 con_hang=True
+[2026-09-22 09:52:47] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 66 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:47] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [31ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:47] [VECTORSTORE] [UPSERT] 'TESTSTT3' — 'Sách TESTSTT3' [74ms] | embed từ: ten_sach
+[2026-09-22 09:52:47] [VS_SYNC] CON_HANG UPDATE 'TESTSTT3' — soLuong=8 con_hang=True
+[2026-09-22 09:52:47] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 66 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:47] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [33ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:47] [VECTORSTORE] [UPSERT] 'TESTSTT3' — 'Sách TESTSTT3' [70ms] | embed từ: ten_sach
+[2026-09-22 09:52:47] [VS_SYNC] CON_HANG UPDATE 'TESTSTT3' — soLuong=7 con_hang=True
+[2026-09-22 09:52:47] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 66 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:47] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [39ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:47] [VECTORSTORE] [UPSERT] 'TESTSTT4' — 'Sách TESTSTT4' [67ms] | embed từ: ten_sach
+[2026-09-22 09:52:47] [VS_SYNC] UPSERT 'TESTSTT4' — 'Sách TESTSTT4' (con_hang=True)
+[2026-09-22 09:52:47] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 67 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:47] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [39ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:47] [VECTORSTORE] [UPSERT] 'TESTSTT4' — 'Sách TESTSTT4' [88ms] | embed từ: ten_sach
+[2026-09-22 09:52:47] [VS_SYNC] CON_HANG UPDATE 'TESTSTT4' — soLuong=9 con_hang=True
+[2026-09-22 09:52:48] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 67 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:48] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [32ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:48] [VECTORSTORE] [UPSERT] 'TESTSTT4' — 'Sách TESTSTT4' [63ms] | embed từ: ten_sach
+[2026-09-22 09:52:48] [VS_SYNC] CON_HANG UPDATE 'TESTSTT4' — soLuong=8 con_hang=True
+[2026-09-22 09:52:48] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 67 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:48] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [30ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:48] [VECTORSTORE] [UPSERT] 'TESTSTT4' — 'Sách TESTSTT4' [90ms] | embed từ: ten_sach
+[2026-09-22 09:52:48] [VS_SYNC] CON_HANG UPDATE 'TESTSTT4' — soLuong=9 con_hang=True
+[2026-09-22 09:52:48] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 67 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-09-22 09:52:48] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [28ms] [62 chars] → 384-dim vector
+[2026-09-22 09:52:48] [VECTORSTORE] [UPSERT] 'TESTSTT4' — 'Sách TESTSTT4' [54ms] | embed từ: ten_sach
+[2026-09-22 09:52:48] [VS_SYNC] CON_HANG UPDATE 'TESTSTT4' — soLuong=8 con_hang=True
