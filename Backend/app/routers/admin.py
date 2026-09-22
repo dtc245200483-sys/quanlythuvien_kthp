@@ -64,6 +64,7 @@ def update_library_config(
         raise HTTPException(status_code=404, detail="Chưa có cấu hình thư viện.")
     cfg.max_borrow_days = body.max_borrow_days
     cfg.overdue_fine_points_per_day = body.overdue_fine_points_per_day
+    cfg.overdue_fine_vnd_per_day_lecturer = body.overdue_fine_vnd_per_day_lecturer
     cfg.max_books_at_once = body.max_books_at_once
     write_audit_log(
         db,
@@ -317,3 +318,72 @@ def dong_bo_vector_store(
             status_code=500,
             detail=f"Đồng bộ Vector Store thất bại: {e}",
         )
+
+
+@router.post("/repair-book-copies")
+def repair_book_copies(
+    db: Session = Depends(get_db),
+    user=Depends(require_roles("admin")),
+):
+    """
+    Quét và sửa các BookCopy bị kẹt ở trạng thái 'Đang mượn'
+    mà không có BorrowDetail active tương ứng.
+    Đồng thời đồng bộ lại soLuong trong bảng Books.
+    """
+    from ..models import Book, BookCopy, BorrowDetail, BorrowSlip, DatTruoc
+
+    dang_muon_copies = (
+        db.query(BookCopy).filter(BookCopy.status == "Đang mượn").all()
+    )
+
+    fixed_copies = 0
+    for copy in dang_muon_copies:
+        active_borrow = (
+            db.query(BorrowDetail)
+            .join(BorrowSlip, BorrowSlip.ma_phieu == BorrowDetail.ma_phieu)
+            .filter(
+                BorrowDetail.copy_id == copy.copy_id,
+                BorrowDetail.ngay_tra_chi_tiet.is_(None),
+                BorrowSlip.trang_thai == "dang_muon",
+            )
+            .first()
+        )
+        reserved = (
+            db.query(DatTruoc)
+            .filter(
+                DatTruoc.copy_id == copy.copy_id,
+                DatTruoc.trang_thai.in_(["CHO_XU_LY", "SAN_SANG"]),
+            )
+            .first()
+        )
+        if active_borrow is None and reserved is None:
+            copy.status = "Có sẵn"
+            fixed_copies += 1
+
+    # Đồng bộ soLuong = số copy "Có sẵn"
+    synced_books = 0
+    all_books = db.query(Book).all()
+    for book in all_books:
+        co_san = (
+            db.query(BookCopy)
+            .filter(BookCopy.book_id == book.ma, BookCopy.status == "Có sẵn")
+            .count()
+        )
+        if book.soLuong != co_san:
+            book.soLuong = co_san
+            synced_books += 1
+
+    write_audit_log(
+        db,
+        user,
+        "REPAIR_BOOK_COPIES",
+        "SYSTEM",
+        details=f"fixed_copies={fixed_copies}; synced_books={synced_books}",
+    )
+    db.commit()
+
+    return {
+        "message": "Sửa dữ liệu BookCopies hoàn tất.",
+        "fixed_copies": fixed_copies,
+        "synced_books": synced_books,
+    }
