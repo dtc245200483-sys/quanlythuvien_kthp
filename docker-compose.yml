@@ -31,6 +31,8 @@ services:
       # Giữ nguyên dữ liệu Vector Store và Log ngoài máy host
       - ./chatbotAI/vector_db:/app/chatbotAI/vector_db
       - ./chatbotAI/logs:/app/chatbotAI/logs
+      - ./frontend:/app/frontend
+      - ./Backend/app:/app/Backend/app
 
 volumes:
   mssql_data:

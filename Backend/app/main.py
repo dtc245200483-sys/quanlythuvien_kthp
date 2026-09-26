@@ -136,6 +136,8 @@ app.include_router(chatbot.router)
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
-frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "Frontend"))
+frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend"))
+if not os.path.exists(frontend_path):
+    frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "Frontend"))
 if os.path.exists(frontend_path):
     app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
