@@ -1,0 +1,30 @@
+=====================================================================
+  HƯỚNG DẪN SỬ DỤNG CÁC SCRIPT KHỞI CHẠY (THƯ MỤC /run)
+=====================================================================
+
+Thư mục này chứa các file thực thi nhanh (click đúp chuột là chạy)
+dành cho bạn và người nhận đồ án (Thầy/Cô, bạn bè trong nhóm):
+
+1. File "1_chay_docker.bat":
+   - Dành cho máy ĐÃ CÓ Docker Desktop (Khuyến nghị cao nhất).
+   - Tác dụng: Click đúp vào file, script sẽ tự động kiểm tra Docker,
+     bật container Backend + SQL Server, tự nạp dữ liệu mẫu và tự mở
+     trình duyệt tại http://localhost:8000/ để dùng ngay.
+
+2. File "2_dung_docker.bat":
+   - Tác dụng: Click đúp để tắt và giải phóng toàn bộ container Docker.
+   - Dữ liệu đã lưu sẽ không bị mất.
+
+3. File "3_chay_local_python.bat":
+   - Dành cho máy KHÔNG CÓ Docker Desktop (chạy thủ công bằng Python).
+   - Tác dụng: Tự kích hoạt môi trường ảo .venv, chạy migration, nạp dữ liệu
+     mẫu, mở trình duyệt và bật máy chủ Uvicorn trên máy cục bộ.
+
+---------------------------------------------------------------------
+DANH SÁCH TÀI KHOẢN MẪU CÓ SẴN TRONG HỆ THỐNG:
+1. Quản trị viên (Admin):    admin      / admin1
+2. Thủ thư (Librarian):      librarian  / librarian1
+3. Độc giả 1:                docgia1    / docgia1  (Đã có sẵn lịch sử mượn & phạt)
+4. Độc giả 2:                docgia2    / docgia2
+5. Độc giả vãng lai:         reader     / reader1
+=====================================================================
