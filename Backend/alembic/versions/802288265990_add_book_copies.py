@@ -21,7 +21,7 @@ def upgrade() -> None:
     sa.Column('copy_id', sa.Unicode(length=20), nullable=False),
     sa.Column('book_id', sa.Unicode(length=20), nullable=False),
     sa.Column('status', sa.Unicode(length=50), nullable=False),
-    sa.CheckConstraint("status IN ('Có sẵn', 'Đang mượn', 'Đang giữ chỗ', 'Hỏng', 'Mất')", name='ck_book_copies_status'),
+    sa.CheckConstraint("status IN (N'Có sẵn', N'Đang mượn', N'Đang giữ chỗ', N'Hỏng', N'Mất')", name='ck_book_copies_status'),
     sa.ForeignKeyConstraint(['book_id'], ['Books.ma'], ),
     sa.PrimaryKeyConstraint('copy_id')
     )

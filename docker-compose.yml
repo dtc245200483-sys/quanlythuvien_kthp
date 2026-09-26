@@ -1,0 +1,34 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: library_sqlserver
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Password123!
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: library_ai_backend
+    restart: unless-stopped
+    depends_on:
+      - sqlserver
+    environment:
+      - DATABASE_URL=mssql+pyodbc://sa:Password123!@sqlserver:1433/LibraryDB?driver=ODBC+Driver+17+for+SQL+Server&TrustServerCertificate=yes
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-your_key_here}
+    ports:
+      - "8000:8000"
+    volumes:
+      # Giữ nguyên dữ liệu Vector Store và Log ngoài máy host
+      - ./chatbotAI/vector_db:/app/chatbotAI/vector_db
+      - ./chatbotAI/logs:/app/chatbotAI/logs
+
+volumes:
+  mssql_data:

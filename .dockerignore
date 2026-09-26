@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+*.env
+Backend/.env
+chatbotAI/.env
+.venv
+venv/
+__pycache__
+*/__pycache__
+*/*/__pycache__
+.pytest_cache
+*.pyc
+*.pyo
+chatbotAI/logs/*
+!chatbotAI/logs/.gitkeep
