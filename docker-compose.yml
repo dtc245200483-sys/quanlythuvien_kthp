@@ -20,9 +20,11 @@ services:
     restart: unless-stopped
     depends_on:
       - sqlserver
+    env_file:
+      - path: ./chatbotAI/.env
+        required: false
     environment:
       - DATABASE_URL=mssql+pyodbc://sa:Password123!@sqlserver:1433/LibraryDB?driver=ODBC+Driver+17+for+SQL+Server&TrustServerCertificate=yes
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-your_key_here}
     ports:
       - "8000:8000"
     volumes:
