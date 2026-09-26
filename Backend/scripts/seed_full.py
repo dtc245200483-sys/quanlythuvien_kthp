@@ -304,18 +304,20 @@ def seed_all():
             from chatbotAI.index_sach import dong_bo_toan_bo
             from chatbotAI.vector_store import VectorStore
             all_books = db.query(Book).all()
-            vs_data = [{
-                "ma_sach": b.ma,
-                "ten_sach": b.ten,
-                "tac_gia": b.tacGia,
-                "tom_tat": b.tomTat or "",
-                "the_loai": b.theLoai or "",
-                "con_hang": b.soLuong > 0
-            } for b in all_books]
-            
-            dong_bo_toan_bo(vs_data)
             vs = VectorStore()
-            print(f"  ✓ Vector Store đã sẵn sàng! Hiện có: {vs.dem_so_luong()} cuốn sách.")
+            if len(all_books) > 0 and vs.dem_so_luong() >= len(all_books):
+                print(f"  ✓ Vector Store đã có sẵn {vs.dem_so_luong()} cuốn sách (bỏ qua đồng bộ lại).")
+            else:
+                vs_data = [{
+                    "ma_sach": b.ma,
+                    "ten_sach": b.ten,
+                    "tac_gia": b.tacGia,
+                    "tom_tat": b.tomTat or "",
+                    "the_loai": b.theLoai or "",
+                    "con_hang": b.soLuong > 0
+                } for b in all_books]
+                dong_bo_toan_bo(vs_data)
+                print(f"  ✓ Vector Store đã sẵn sàng! Hiện có: {vs.dem_so_luong()} cuốn sách.")
         except Exception as e:
             print(f"  ⚠️ Cảnh báo đồng bộ Vector Store: {e}")
             print("     (Gợi ý: Cần đảm bảo đã cài pip install -r chatbotAI/requirements.txt)")
