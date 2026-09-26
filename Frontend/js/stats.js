@@ -210,5 +210,12 @@
     }
     Auth.applyRoleUI();
     loadStats();
+
+    var btnRefresh = document.getElementById("btn-refresh");
+    if (btnRefresh) {
+      btnRefresh.addEventListener("click", function () {
+        loadStats();
+      });
+    }
   });
 })();

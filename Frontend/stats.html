@@ -16,7 +16,10 @@
     <div id="page-message" class="alert" hidden></div>
     <div id="mock-banner" class="alert" hidden>Đang dùng dữ liệu mẫu — Backend chưa có API /api/stats/*.</div>
 
-    <div class="toolbar">
+    <div class="toolbar" style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+      <button id="btn-refresh" class="btn btn-secondary" type="button" style="display: inline-flex; align-items: center; gap: 8px;">
+        <span class="icon">🔄</span> Làm mới dữ liệu
+      </button>
     </div>
 
     <div id="loading" class="loading" hidden>
