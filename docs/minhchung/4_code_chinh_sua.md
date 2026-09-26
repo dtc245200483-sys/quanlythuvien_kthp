@@ -124,6 +124,44 @@ Ngày 16/09, trong đợt kiểm thử thực tế trước khi hoàn thiện n�
 3. Rà soát `Frontend/js/api.js` đảm bảo hàm `serializeForm` tự động đóng gói trường `tomTat` gửi lên API.
 4. Kiểm tra Backend `routers/books.py`: xác nhận API lưu `tomTat` vào SQL Server và tự động kích hoạt `_dong_bo_sach_len_vs(book, action="upsert")` để cập nhật tức thì lên ChromaDB.
 
+### 25. Bắt lỗi False Negative khi Chatbot AI tìm kiếm sách theo Thể loại / Danh mục gợi ý (26/09)
+Khi người dùng bấm vào các nút gợi ý nhanh (Quick Pills) trên giao diện Chatbot như *"📚 Sách Kinh tế & Quản trị"*, *"💻 Sách Lập trình & CNTT"*, *"🤖 Sách Trí tuệ nhân tạo & AI"*... Chatbot trả về 0 cuốn sách.
+**Phân tích nguyên nhân:** Thuật toán phát hiện tên sách `_phat_hien_tra_cuu_ten_sach()` trong `rag_retriever.py` thấy câu hỏi ngắn hoặc có độ tương đồng tên sách trong khoảng 50–79% nên bật cờ `co_the_la_ten_sach = True`. Sau đó, bước hậu xử lý tại `chatbot_service.py` yêu cầu tên sách phải khớp với cả câu hỏi trên 75%, dẫn đến việc lọc sạch toàn bộ kết quả tìm được.
+**Cách tôi điều khiển AI:**
+1. Mở rộng từ điển chủ đề `_TU_KHOA_TIM_KIEM_CHU_DE` trong `rag_retriever.py` với các từ khóa thể loại thực tế.
+2. Thêm hàm tiền xử lý cắt bỏ icon/emoji và các từ đệm ("sách", "gợi ý") trước khi tính fuzzy match.
+3. Bổ sung cơ chế phát hiện truy vấn thể loại `la_tim_the_loai` tại `chatbot_service.py` để bypass qua bộ lọc tên sách khắt khe.
+4. Cập nhật các nút Quick Pills trong `frontend/chatbot.html` gửi đúng từ khóa thể loại chuẩn. Kết quả: Chatbot gợi ý chính xác 2–4 sách thật trong kho cho mọi danh mục.
+
+### 26. Khắc phục lỗi tài khoản độc giả chưa liên kết và không thể tải thông báo (26/09)
+Khi đăng nhập bằng tài khoản độc giả mặc định `reader / reader1`, hệ thống hiển thị thông báo lỗi: *"Tài khoản chưa liên kết với độc giả"* và *"Không thể tải thông báo"*.
+**Phân tích nguyên nhân:** Bản ghi người dùng `reader` trong bảng `Users` có trường `reader_id = NULL`. Do không có mã độc giả tương ứng trong bảng `Readers`, endpoint `/api/notifications` không thể truy vấn thông báo nhắc hạn và đặt trước.
+**Cách tôi điều khiển AI:**
+1. Truy vấn SQL Server để xác định độc giả phù hợp trong DB (`DG003` - Lê Minh Cường).
+2. Thực hiện lệnh liên kết tài khoản: `UPDATE Users SET reader_id = 'DG003' WHERE username = 'reader'`.
+3. Cập nhật script `Backend/scripts/seed_full.py` để mỗi lần seed tài khoản `reader` đều được gắn sẵn `reader_id = 'DG003'`.
+4. Rà soát logic tại `routers/auth.py`: đảm bảo luồng độc giả tự đăng ký qua `/api/auth/register` luôn tự động tạo hồ sơ `Reader` và liên kết ngay lập tức với tài khoản `User` mới tạo, không bao giờ bị mồ côi.
+
+### 27. Điều tra tận gốc và Chuẩn hóa số lượng sách toàn thư viện (27/09)
+Kiểm tra danh mục sách, phát hiện cuốn *"50 Cuốn Sách Kinh Điển Về Kinh Doanh"* (`5CSKDVKD0002`) chỉ còn 1 quyển và cuốn *"Combo Sửa Chữa Ô Tô"* (`CSSCOTTCBDNC0011`) còn 4 quyển dù không có ai mượn.
+**Cách tôi điều khiển AI:** Tuyệt đối không cho phép AI tự tiện sửa số liệu trong CSDL nếu chưa làm rõ nguyên nhân. Tôi buộc AI truy vết toàn bộ lịch sử git log, changelog và cơ chế seed:
+1. Phát hiện nguyên nhân gốc rễ: Cuốn `5CSKDVKD0002` từng bị bộ Unit Test KTR2 ghi đè tụt tồn kho (đã được ghi nhận trong `thuky/changelog_tong.md`). Sau đó, đợt export file `books_catalog.json` ở commit `8a9be14` đã trích xuất CSDL khi đang chạy test mượn dở dang, dẫn đến việc đóng băng con số 1 và 4 vào file seed.
+2. Sau khi chứng minh rõ nguyên nhân, tôi chỉ đạo chuẩn hóa:
+   - Sửa `books_catalog.json` và `books_data.txt`: cập nhật `soLuong = 5` cho toàn bộ 63 cuốn sách.
+   - Cập nhật SQL Server: `UPDATE Books SET soLuong = 5` và chèn các bản copy còn thiếu vào `BookCopies` (`5CSKDVKD0002-C02` đến `C05`, `CSSCOTTCBDNC0011-C05`).
+   - Kết quả: Toàn bộ 63 cuốn sách có đủ 315 bản sao vật lý (`C01`–`C05`), 100% ở trạng thái "Có sẵn", đồng bộ trạng thái `con_hang = True` trên Vector Store.
+
+### 28. Tái cấu trúc thư mục Docker và khắc phục lỗi tắt phụt cửa sổ CMD (27/09)
+Khi nhấn đúp vào file `run/1_chay_docker.bat`, cửa sổ Command Prompt lập tức bị tắt phụt đi mà không mở được web.
+**Phân tích nguyên nhân:** File `.bat` gọi đến file `run_docker.ps1` nhưng file `.ps1` bị thiếu trên ổ đĩa. PowerShell báo lỗi file not found và thoát ngay do file `.bat` không có lệnh dừng (`pause`). Đồng thời, container SQL Server cần vài giây khởi động dịch vụ, việc gọi script seed ngay lập tức khi chưa mở cổng gây ra crash kết nối.
+**Cách tôi điều khiển AI:**
+1. Viết lại script PowerShell `run_docker.ps1` chuẩn UTF-8 sạch, không dùng ký tự gây lỗi parser.
+2. Thêm vòng lặp kiểm tra kết nối SQL Server thông minh (Smart Wait Loop) tối đa 30s trước khi chạy migration và seed.
+3. Thêm lệnh tự động mở trình duyệt web: `Start-Process "http://localhost:8000/"`.
+4. Thêm chốt chặn `pause` / `Read-Host` hiển thị danh sách tài khoản mẫu và không bao giờ tự đóng màn hình.
+5. Gom toàn bộ file Docker (`Dockerfile`, `docker-compose.yml`, `.dockerignore`) vào thư mục riêng `docker/`, cấu hình `name: app` để giữ nguyên các Docker volume (`app_mssql_data`, `app_chroma_data`), dọn sạch thư mục gốc dự án.
+
 ---
 **KẾT LUẬN CUỐI CÙNG:** Bằng sự bao quát từ Data, Backend, Frontend cho tới Trải nghiệm người dùng, tôi đã bổ khuyết hoàn hảo cho sự máy móc của AI. Phần mềm cuối cùng không chỉ sạch bug về mặt kỹ thuật, mà còn cực kỳ **Thấu hiểu nghiệp vụ và Tôn trọng người dùng**.
+
 

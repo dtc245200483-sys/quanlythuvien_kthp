@@ -234,9 +234,10 @@ POST /api/admin/dong-bo-vector-store   (Admin only)
 
 ## Phần sinh viên đã kiểm tra/chỉnh sửa
 - [x] **Kiểm tra luồng nhập liệu của Thủ thư (16/09/2026)**: Phát hiện trên màn hình Quản lý sách (`books.html`), modal "Thêm sách / Sửa sách" bị thiếu trường nhập `Tóm tắt nội dung sách` (`tomTat`), khiến sách mới thêm vào SQL Server không có nội dung ngữ cảnh để đồng bộ sang ChromaDB. Đã chỉ đạo bổ sung trường `<textarea name="tomTat">` trong `books.html`, nạp dữ liệu tự động trong `books.js` và xác nhận hàm `_dong_bo_sach_len_vs` cập nhật tức thì sang Vector Store.
+- [x] **Chuẩn hóa kho sách vật lý & đồng bộ vector store (27/09/2026)**: Rà soát và chuẩn hóa toàn bộ 63 đầu sách về đúng 5 bản vật lý/đầu sách (`Books.soLuong = 5`, `BookCopies` đạt 315 bản sao ở trạng thái "Có sẵn"), đồng thời đồng bộ hóa metadata `con_hang: True` và ngữ cảnh tóm tắt sang ChromaDB vector collection `sach_thu_vien`.
 
 ---
 
 ## Ngày thực hiện
-15/09/2026 10:44 (Cập nhật bổ sung: 16/09/2026)
+15/09/2026 10:44 (Cập nhật bổ sung: 16/09/2026; Chuẩn hóa kho sách: 27/09/2026)
 

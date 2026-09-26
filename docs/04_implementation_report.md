@@ -6,7 +6,7 @@
 |---|---|---|
 | `fastapi-expert` | PRIMARY | Triển khai 13 routers, 10 models, dependency injection, JWT middleware. |
 | `database-design` | PRIMARY | 10 bảng SQL Server với PK, FK, Indexes, Constraints. Alembic migrations. |
-| `tdd` | PRIMARY | 12 file test, 83+ test cases (pytest + httpx TestClient). |
+| `tdd` | PRIMARY | 12 file test, 111 unit tests tại Backend/tests/ & 118 tests tại qa/backend/ (pytest + httpx TestClient). |
 | `web-design-guidelines` | SUPPORTING | CSS custom responsive 23KB, Google Fonts Be Vietnam Pro. |
 
 ## 2. Bảng Kết quả Triển khai
@@ -33,6 +33,7 @@
 | T-19 | FR-AUTH-01 | `index.html`, `js/auth.js`, `js/api.js` | — | Browser login | PASS |
 | T-20 | FR-AUTH-02 | `js/layout.js` | — | Sidebar role check | PASS |
 | T-21 | FR-* | 15 HTML + 20 JS files | — | Browser check | PASS |
+| T-22 | CONSTRAINT-DEPLOY-01 | `docker/Dockerfile`, `docker/docker-compose.yml`, `run/run_docker.ps1` | — | Docker compose multi-service (FastAPI + SQL Server + ChromaDB) 1-click | PASS |
 
 ## 3. Thống kê mã nguồn
 
@@ -44,6 +45,7 @@
 | Frontend HTML | 15 | ~54KB |
 | Frontend JS | 20 | ~147KB |
 | Frontend CSS | 1 | 23KB |
+| Triển khai Docker & Script | 3 file cấu hình tại `docker/` + 4 script tại `run/` | ~15KB |
 
 STATUS: PASS
 NEXT_INPUT: source code, tests, docs/04_implementation_report.md

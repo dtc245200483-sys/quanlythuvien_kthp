@@ -25,7 +25,7 @@
 | Layout responsive | Sidebar thu gọn trên mobile | ✅ |
 | SQL Server | Connection string từ `.env` | ✅ |
 | Alembic migrations | `backend/alembic/versions/` | ✅ |
-| Tests | 12 file test, 83+ cases, all PASS | ✅ |
+| Tests | 12 file test, 111 unit tests (Backend/tests/) + 118 tests (qa/backend/), all PASS | ✅ |
 | README | Hướng dẫn install/run/test | ✅ |
 | Không secret | `.env` trong `.gitignore`, có `.env.example` | ✅ |
 | Không file rác | Không `__pycache__`, `.pytest_cache` | ✅ |
@@ -54,10 +54,20 @@ Dự án sử dụng mô hình Đa tác tử (Multi-Agent System):
 | Frontend | Vanilla HTML5, CSS3, JavaScript (ES6+) |
 | Typography | Google Fonts Be Vietnam Pro |
 | Testing | pytest, httpx (TestClient) |
-| AI | Python (Module gợi ý) |
+| AI / RAG | DeepSeek LLM (OpenRouter), ChromaDB, Sentence-Transformers |
+| Triển khai | Docker, Docker Compose đa container, 1-Click Startup Scripts |
 
 ## 5. Hướng dẫn cài đặt & chạy
 
+### Cách 1: Chạy 1-Click bằng Docker (Khuyên dùng)
+```powershell
+# Nhấp đúp vào file 1_chay_docker.bat tại thư mục gốc
+# Hoặc chạy lệnh PowerShell:
+powershell -ExecutionPolicy Bypass -File ./run/run_docker.ps1
+# Hệ thống sẽ tự động khởi động SQL Server, Backend API, ChromaDB và mở trình duyệt tại http://localhost:8000/
+```
+
+### Cách 2: Chạy trực tiếp (Local Development)
 ```powershell
 # 1. Cài dependencies
 cd backend
@@ -86,7 +96,10 @@ pytest tests/ -v
 
 - **Backend:** 13 routers, 10 models, API đầy đủ.
 - **Frontend:** 15 trang HTML, 20 file JS, CSS responsive.
-- **Tests:** 12 file test, 83+ test cases, ALL PASS.
+- **Dữ liệu kho sách:** 63 đầu sách thực tế, chuẩn hóa 315 cuốn sách vật lý (5 cuốn/đầu sách, 100% "Có sẵn"), đồng bộ ChromaDB.
+- **Trợ lý AI:** RAG Chatbot DeepSeek + ChromaDB, tìm kiếm ngữ nghĩa, phòng vệ 2 tầng, hỗ trợ gợi ý thể loại (Quick Category Boost).
+- **Triển khai:** Đóng gói Docker hoàn chỉnh tại `docker/`, kịch bản khởi động 1-click `1_chay_docker.bat` & `run/run_docker.ps1`.
+- **Tests:** 12 file test, 111 unit tests (Backend/tests/) + 118 tests (qa/backend/), ALL PASS.
 - **Known Issues:** Không có BLOCKER/CRITICAL.
 
 STATUS: PASS

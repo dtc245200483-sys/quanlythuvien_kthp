@@ -293,9 +293,10 @@ Chạy script kiểm thử [chatbotAI/test_chan_lac_de.py](file:///d:/ung%20dung
 ---
 
 ## Phần sinh viên đã kiểm tra/chỉnh sửa
-(sinh viên tự điền sau khi review code)
+- [x] **Tối ưu cấu hình RAG Prompt & Top_k (16/09/2026)**: Chuẩn hóa `PROMPT_VERSION = "v3"`, điều chỉnh `top_k = 4` để cô đọng ngữ cảnh đưa vào LLM, giảm thời gian xử lý và tiết kiệm token OpenRouter.
+- [x] **Bản vá Category Boost & Exact Match khắc phục False Negative (26/09/2026 - 27/09/2026)**: Phát hiện khi người dùng nhấn nút gợi ý thể loại (Lập trình, Kinh tế, Văn học...) thì câu hỏi ngắn bị embedding tính điểm thấp (< 0.35), gây chặn nhầm ở tầng retrieval. Đã bổ sung logic trong `rag_retriever.py` tự động so khớp thể loại trong CSDL SQL và boost điểm relevance lên [0.70, 0.85] để luôn nạp sách phù hợp vào context cho LLM DeepSeek sinh câu trả lời.
 
 ---
 
 ## Ngày thực hiện
-15/09/2026 11:25
+15/09/2026 11:25 (Cập nhật bổ sung: 16/09/2026; Bản vá Category Boost: 27/09/2026)

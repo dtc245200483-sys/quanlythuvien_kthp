@@ -1,3 +1,5 @@
+name: app
+
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -14,25 +16,26 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: docker/Dockerfile
     container_name: library_ai_backend
     restart: unless-stopped
     depends_on:
       - sqlserver
     env_file:
-      - path: ./chatbotAI/.env
+      - path: ../chatbotAI/.env
         required: false
     environment:
       - DATABASE_URL=mssql+pyodbc://sa:Password123!@sqlserver:1433/LibraryDB?driver=ODBC+Driver+17+for+SQL+Server&TrustServerCertificate=yes
     ports:
       - "8000:8000"
     volumes:
-      # Giữ nguyên dữ liệu Vector Store và Log ngoài máy host
-      - ./chatbotAI/vector_db:/app/chatbotAI/vector_db
-      - ./chatbotAI/logs:/app/chatbotAI/logs
-      - ./frontend:/app/frontend
-      - ./Backend/app:/app/Backend/app
+      - ../frontend:/app/frontend
+      - ../Backend:/app/Backend
+      - ../chatbotAI:/app/chatbotAI
+      # Named volume cho vector_db đè lên để đảm bảo I/O nhanh và không lỗi SQLite trên Windows
+      - chroma_data:/app/chatbotAI/vector_db
 
 volumes:
   mssql_data:
+  chroma_data:

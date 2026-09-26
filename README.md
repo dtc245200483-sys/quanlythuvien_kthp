@@ -98,11 +98,15 @@ python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 ### CÁCH 2: Chạy tự động bằng Docker & Docker Compose (Khuyến nghị / Điểm cộng)
 
-Nếu máy đã cài sẵn **Docker Desktop**, bạn chỉ cần 3 lệnh đơn giản tại thư mục gốc của project:
+Nếu máy đã cài sẵn **Docker Desktop**, bạn có 2 cách khởi chạy:
 
+**Cách nhanh nhất (Khuyến nghị):**
+👉 Chỉ cần nhấp đúp chuột vào file **`run/1_chay_docker.bat`** — hệ thống sẽ tự động bật container, nạp dữ liệu và mở sẵn trình duyệt web tại `http://localhost:8000/`.
+
+**Cách chạy bằng lệnh (Terminal):**
 #### Bước 1: Khởi động hệ thống (Backend + SQL Server 2022)
 ```powershell
-# Chạy tại thư mục gốc project
+cd docker
 docker compose up -d --build
 ```
 *Lệnh này sẽ tự động tải SQL Server 2022, cài đặt ODBC Driver 17, build image Backend và kết nối mạng nội bộ.*
@@ -123,8 +127,10 @@ docker compose exec backend python scripts/seed_full.py
 - Truy cập ngay hệ thống tại: `http://localhost:8000/`
 - Khi muốn dừng hệ thống:
   ```powershell
+  cd docker
   docker compose down
   ```
+  *(Hoặc nhấp đúp chuột vào file `run/2_dung_docker.bat`).*
 *(Dữ liệu SQL Server và Vector Store của ChromaDB được lưu bền vững qua volume, không bị mất khi tắt container).*
 
 ---
@@ -150,7 +156,7 @@ Khi server đang chạy (dù chạy theo Cách 1 hay Cách 2):
 
 Để xác nhận toàn bộ hệ thống hoạt động chính xác theo tiêu chí chấm điểm:
 
-1. **Kiểm tra nghiệp vụ Backend (83 test cases):**
+1. **Kiểm tra nghiệp vụ Backend (111 unit tests tại Backend/tests/ & 118 tests tại qa/backend/):**
    ```powershell
    pytest tests/ -v
    ```

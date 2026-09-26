@@ -79,3 +79,16 @@ Dưới đây là 18 Prompt tiêu biểu (được sắp xếp theo đúng trìn
 ### 19. Prompt bổ sung ô nhập Tóm tắt nội dung sách cho Thủ thư (16/09)
 > *"Ở tài khoản thủ thư chưa có phần nhập nội dung tóm tắt sách trong modal Thêm/Sửa sách (`books.html`). Bổ sung ngay ô `<textarea id="book-tomtat" name="tomTat">` chiếm full-width (2 cột) trong modal, cập nhật hàm `openForm` trong `books.js` để tự động điền tóm tắt cũ khi sửa, đảm bảo gửi lên API `POST/PUT /api/books` và kích hoạt hàm `_dong_bo_sach_len_vs` cập nhật tự động vào ChromaDB Vector Store."*
 
+### 20. Prompt sửa lỗi gợi ý thể loại / Quick Pills của Chatbot AI (26/09)
+> *"Khi bấm vào các nút gợi ý nhanh như '📚 Sách Kinh tế & Quản trị', '💻 Sách Lập trình & CNTT', '🤖 Sách Trí tuệ nhân tạo & AI', '🔒 Sách An ninh mạng & Bảo mật', '🗣️ Sách Kỹ năng & Giao tiếp', '⭐ Sách hay & Đáng đọc nhất' thì Chatbot lại báo không tìm thấy sách. Kiểm tra lại toàn bộ luồng RAG: mở rộng từ khóa thể loại trong `rag_retriever.py`, loại bỏ các icon emoji/từ đệm trước khi tính fuzzy match, và rào bộ lọc tên sách ở `chatbot_service.py` để không xóa nhầm sách khi người dùng tìm kiếm theo danh mục."*
+
+### 21. Prompt truy vết và sửa lỗi liên kết tài khoản độc giả & thông báo (26/09)
+> *"Tại sao khi đăng nhập tài khoản độc giả lại bị lỗi 'Tài khoản chưa liên kết với độc giả' và 'Không thể tải thông báo'? Kiểm tra bảng Users và Readers trong CSDL, sửa lỗi liên kết cho tài khoản reader với độc giả có sẵn, đồng thời cập nhật script seed_full.py và kiểm tra luồng đăng ký tài khoản mới để đảm bảo không còn ai bị lỗi mồ côi reader_id nữa."*
+
+### 22. Prompt điều tra tận gốc và chuẩn hóa 5 cuốn/đầu sách toàn thư viện (27/09)
+> *"Xem vì sao không có ai mượn sách mà trong dữ liệu cuốn '50 Cuốn Sách Kinh Điển Về Kinh Doanh' lại chỉ còn 1 quyển. Xem lại tất cả, nếu có lỗi sai thì sửa chứ không được tự tiện thêm lại 4 quyển thành 5 quyển. Kiểm tra cả các sách khác nữa. Có phải do di chứng kiểm thử từ trước để lại không? Sau khi làm rõ, chuẩn hóa lại toàn bộ danh mục để mỗi sách đều có đủ 5 cuốn."*
+
+### 23. Prompt tái cấu trúc thư mục Docker và khắc phục lỗi tắt phụt cửa sổ (27/09)
+> *"Tại sao sau khi dừng docker xong tôi nhấn vào file 1_chay_docker.bat thì nó tự bị tắt phụt đi? Sửa lại script sao cho khi nhấn vào là tự bật web lên. Đồng thời gom toàn bộ các file Docker (Dockerfile, docker-compose.yml, .dockerignore) vào thư mục docker/ sao cho gọn gàng thư mục gốc và web vẫn hoạt động bình thường 100% không bị lỗi dữ liệu."*
+
+

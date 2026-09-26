@@ -170,7 +170,77 @@ AI đã thực hiện đúng trọn vẹn yêu cầu:
 _dong_bo_sach_len_vs(book, action="upsert")
 ```
 
+### 15. Prompt mở rộng nhận diện Thể loại / Quick Pills cho Chatbot AI (26/09)
+**Prompt (Lệnh) của tôi:**
+> *"Khi người dùng click vào các nút gợi ý nhanh như '📚 Sách Kinh tế & Quản trị', '💻 Sách Lập trình & CNTT'... Chatbot bị lỗi False Negative trả về 0 sách. Mở rộng từ khóa thể loại trong `rag_retriever.py`, loại bỏ emoji và rào bộ lọc tên sách ở `chatbot_service.py`."*
+
+**Phản hồi của AI:**
+AI đã cập nhật thuật toán phát hiện thể loại và bypass bộ lọc tên sách khi câu hỏi là danh mục:
+```python
+# chatbotAI/chatbot_service.py: Bỏ qua lọc tên sách khắt khe nếu câu hỏi là tìm kiếm thể loại
+cau_hoi_lower = cau_hoi.lower()
+la_tim_the_loai = any(tk in cau_hoi_lower for tk in [
+    "sách", "gợi ý", "tìm", "kinh tế", "quản trị", "lập trình", "cntt",
+    "công nghệ", "trí tuệ nhân tạo", "ai", "bảo mật", "an ninh mạng",
+    "kỹ năng", "giao tiếp", "đáng đọc", "sách hay", "thể loại", "chủ đề"
+])
+if la_tim_the_loai:
+    co_the_la_ten_sach = False
+```
+
+### 16. Prompt sửa lỗi mồ côi tài khoản độc giả và thông báo (26/09)
+**Prompt (Lệnh) của tôi:**
+> *"Tại sao đăng nhập độc giả lại bị lỗi 'Tài khoản chưa liên kết với độc giả' và 'Không thể tải thông báo'? Kiểm tra và sửa lỗi liên kết trong CSDL, cập nhật seed_full.py và bảo đảm luồng đăng ký tự liên kết."*
+
+**Phản hồi của AI:**
+AI phát hiện trường `reader_id` của user `reader` bị `NULL`, tiến hành liên kết trực tiếp trong SQL Server và cập nhật seed:
+```python
+# Backend/scripts/seed_full.py: Gán sẵn reader_id = "DG003" cho tài khoản reader
+("reader", "reader1", "Lê Minh Cường", "DTC245200503@ictu.edu.vn", "0900000003", "reader", "DG003"),
+```
+
+### 17. Prompt điều tra và chuẩn hóa 5 cuốn/mỗi đầu sách (27/09)
+**Prompt (Lệnh) của tôi:**
+> *"Kiểm tra vì sao sách '50 Cuốn Sách Kinh Điển Về Kinh Doanh' chỉ còn 1 cuốn và Combo Sửa chữa Ô tô còn 4 cuốn. Không được tự tiện thêm bừa khi chưa rõ nguyên nhân. Sau khi điều tra ra di chứng Unit Test, chuẩn hóa lại toàn bộ 63 cuốn sách đều có đủ 5 cuốn."*
+
+**Phản hồi của AI:**
+AI truy vết git log phát hiện lỗi đóng băng dữ liệu dở dang vào file seed. Sau đó tiến hành cập nhật:
+```json
+// Backend/scripts/books_catalog.json
+{"ma": "5CSKDVKD0002", "ten": "50 Cuốn Sách Kinh Điển Về Kinh Doanh", ..., "soLuong": 5}
+{"ma": "CSSCOTTCBDNC0011", "ten": "Combo Sách Sửa Chữa Ô Tô...", ..., "soLuong": 5}
+```
+Và bổ sung 5 bản sao vật lý còn thiếu vào SQL Server:
+```sql
+UPDATE Books SET soLuong = 5 WHERE ma IN ('5CSKDVKD0002', 'CSSCOTTCBDNC0011');
+INSERT INTO BookCopies (copy_id, book_id, status) VALUES ('5CSKDVKD0002-C02', '5CSKDVKD0002', N'Có sẵn');
+-- (+ C03, C04, C05 cho 5CSKDVKD0002 và C05 cho CSSCOTTCBDNC0011)
+```
+
+### 18. Prompt tái cấu trúc thư mục Docker và khắc phục lỗi tắt phụt cửa sổ (27/09)
+**Prompt (Lệnh) của tôi:**
+> *"Sửa lỗi 1_chay_docker.bat bị tắt phụt khi click đúp chuột, tự mở web http://localhost:8000/, và chuyển toàn bộ file Docker vào thư mục docker/ mà không bị lỗi dữ liệu hay mất volume."*
+
+**Phản hồi của AI:**
+AI tạo thư mục `docker/`, di chuyển `Dockerfile`, `docker-compose.yml`, `.dockerignore` với cấu hình bảo toàn volume:
+```yaml
+# docker/docker-compose.yml
+name: app  # Đảm bảo giữ nguyên các volume app_mssql_data và app_chroma_data
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+```
+Và tạo kịch bản `run/run_docker.ps1` có Smart Wait Loop kiểm tra SQL Server và tự động mở trình duyệt web:
+```powershell
+# Chờ SQL Server sẵn sàng rồi mới nạp dữ liệu và mở web
+Start-Process "http://localhost:8000/"
+Read-Host "Nhấn phím Enter để đóng cửa sổ này (Hệ thống vẫn tiếp tục chạy ngầm)..."
+```
+
 ---
 **TỔNG KẾT PHẦN 2:**
-Thông qua 14 minh chứng trải dài từ 09/08 đến 16/09, có thể thấy AI là một cỗ máy sinh code cực kỳ mạnh mẽ, **NHƯNG** nó chỉ phát huy sức mạnh khi được định hướng bởi các **Prompt có tư duy kỹ thuật cao** của con người. Prompt yếu = Code yếu. Prompt mạnh = Code mạnh.
+Thông qua 18 minh chứng trải dài từ 09/08 đến 27/09, có thể thấy AI là một cỗ máy sinh code cực kỳ mạnh mẽ, **NHƯNG** nó chỉ phát huy sức mạnh khi được định hướng bởi các **Prompt có tư duy kỹ thuật cao** của con người. Prompt yếu = Code yếu. Prompt mạnh = Code mạnh.
+
 

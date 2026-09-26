@@ -324,6 +324,17 @@ def tra_cuu_sach(cau_hoi: str, prompt_version: Optional[str] = None) -> dict:
     # Hậu xử lý đặc biệt khi câu hỏi có khả năng là tên riêng một cuốn sách cụ thể
     # (cờ co_the_la_ten_sach được đặt bởi _phat_hien_tra_cuu_ten_sach() trong rag_retriever.py)
     co_the_la_ten_sach = getattr(context, "co_the_la_ten_sach", False)
+    
+    # Kiểm tra an toàn: nếu câu hỏi thực chất là tìm kiếm chủ đề / thể loại thì không lọc tên
+    cau_hoi_lower = cau_hoi.lower()
+    la_tim_the_loai = any(tk in cau_hoi_lower for tk in [
+        "sách", "gợi ý", "tìm", "kinh tế", "quản trị", "lập trình", "cntt",
+        "công nghệ", "trí tuệ nhân tạo", "ai", "bảo mật", "an ninh mạng",
+        "kỹ năng", "giao tiếp", "đáng đọc", "sách hay", "thể loại", "chủ đề"
+    ])
+    if la_tim_the_loai:
+        co_the_la_ten_sach = False
+
     if co_the_la_ten_sach and ket_qua_sach:
         # Trong chế độ "tìm tên sách": loại bỏ sách chỉ khớp ngẫu nhiên vài từ trong tên
         # Yêu cầu diem_khop_ten >= 75% (cao hơn FUZZY_THRESHOLD=60 để loại false positive)

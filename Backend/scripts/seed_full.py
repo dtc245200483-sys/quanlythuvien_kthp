@@ -142,7 +142,7 @@ def seed_all():
         users_data = [
             ("admin", "admin1", "Quản trị viên Hệ thống", "admin@ictu.edu.vn", "0900000001", "admin", None),
             ("librarian", "librarian1", "Thủ thư Thư viện", "librarian@ictu.edu.vn", "0900000002", "librarian", None),
-            ("reader", "reader1", "Độc giả Vãng lai", "reader@ictu.edu.vn", "0900000003", "reader", None),
+            ("reader", "reader1", "Lê Minh Cường", "DTC245200503@ictu.edu.vn", "0900000003", "reader", "DG003"),
             ("docgia1", "docgia1", "Nguyễn Văn An", "DTC245200501@ictu.edu.vn", "0912345001", "reader", "DG001"),
             ("docgia2", "docgia2", "Trần Thị Bích", "DTC245200502@ictu.edu.vn", "0912345002", "reader", "DG002"),
         ]

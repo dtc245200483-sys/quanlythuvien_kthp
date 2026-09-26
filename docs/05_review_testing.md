@@ -5,7 +5,7 @@
 | Skill | Vai trò | Bằng chứng |
 |---|---|---|
 | `code-review` | PRIMARY | Review 13 routers, 10 models, 20 JS files. Issue log dưới đây. |
-| `qa` | PRIMARY | Coverage table, 83+ test cases, smoke checks. |
+| `qa` | PRIMARY | Coverage table, 111 unit tests tại Backend/tests/ & 118 tests tại qa/backend/, smoke checks. |
 | `fastapi-expert` | SUPPORTING | Kiểm tra API contract khớp `api_docs.md`. |
 | `diagnosing-bugs` | SUPPORTING | Phân tích root cause cho bugs phát hiện. |
 

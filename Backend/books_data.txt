@@ -1,11 +1,11 @@
-﻿---
+---
 MA: 5CSKDVKD0002
 TEN: 50 Cuß╗æn S├ích Kinh ─Éiß╗ân Vß╗ü Kinh Doanh
 TAC_GIA: (nhiß╗üu t├íc giß║ú)
 THE_LOAI: Kinh tß║┐ - Quß║ún trß╗ï kinh doanh
 NXB: NXB Kinh Tß║┐
 NAM_XB: 2024
-SO_LUONG: 1
+SO_LUONG: 5
 ANH_BIA: https://cdn1.fahasa.com/media/catalog/product/8/9/8935251422290.jpg
 ---
 MA: 7TQHQ0003
@@ -86,7 +86,7 @@ TAC_GIA: (bß╗Ö s├ích chuy├¬n ─æß╗ü)
 THE_LOAI: Kß╗╣ thuß║¡t ├ö t├┤
 NXB: NXB B├ích Khoa
 NAM_XB: 2024
-SO_LUONG: 4
+SO_LUONG: 5
 ANH_BIA: https://cdn1.fahasa.com/media/catalog/product/c/o/combo-8935095626977-8935095630172.jpg
 ---
 MA: DDTD0012

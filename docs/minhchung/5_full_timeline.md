@@ -42,6 +42,11 @@ Cung cấp một **bản tổng hợp đầy đủ** các nhật ký (log), prom
 | 31/08 | Sửa Queue Position + Khôi phục tồn kho | Vị trí hàng đợi + bản copy bị test phá | Debug & lệnh khôi phục DB |
 | 15/09–16/09 | Tích hợp RAG AI & Lưu lịch sử liên trang | DeepSeek LLM, ChromaDB, sessionStorage, modal Tiếng Việt | Kiến trúc sư AI & kiểm toán 10 tiêu chí KT3 |
 | 16/09 | Bổ sung nhập Tóm tắt sách (tomTat) | Thêm textarea trong modal Quản lý sách, nạp/lưu tự động và đồng bộ ChromaDB | Phát hiện thiếu sót & chỉ đạo AI bổ sung |
+| 26/09 | Kiểm toán toàn diện 20 tiêu chí KT3 & Căn chỉnh Docker Compose | Dockerfile, docker-compose đa dịch vụ (SQL Server + FastAPI + ChromaDB), scripts chạy 1-click | Tổ chức kiểm thử & nghiệm thu 20/20 tiêu chí |
+| 26/09 | Fix liên kết Độc giả & Lỗi API Thông báo 500 | Users.reader_id = 'DG003', seed_full.py, /api/auth/register, /api/notifications/my | Bắt lỗi phân quyền & tài khoản mồ côi |
+| 26/09–27/09 | Fix Chatbot Quick Category Pills (False Negative) | rag_retriever.py exact category match, hybrid boost, chatbot.html data.ket_qua | Debug RAG retrieval & xử lý lỗi logic UI |
+| 27/09 | Chuẩn hóa kho sách vật lý 5 cuốn/đầu sách (315 cuốn) | BookCopies, Books.soLuong = 5, books_catalog.json, books_data.txt, ChromaDB sync | Audit dữ liệu kho sách & chỉ đạo chuẩn hóa |
+| 27/09 | Quy hoạch thư mục Docker & nâng cấp 1-click startup | Di chuyển Docker vào docker/, name: app bảo toàn volume, run_docker.ps1 chờ SQL & auto mở web | Tối ưu đóng gói triển khai & UX khởi chạy |
 
 ## Thống kê tổng quan
 
@@ -49,9 +54,10 @@ Cung cấp một **bản tổng hợp đầy đủ** các nhật ký (log), prom
 |--------|---------|
 | Tổng số log trong changelog | ~700 dòng |
 | Tổng số migration (schema versioning) | 14 file |
-| Tổng số Unit Test | 111 test (PASS 100%) + Kịch bản RAG/Session |
-| Số lần AI sinh code sai phải sửa | 24 lần (xem Phần 4) |
-| Số Prompt phức tạp được ghi nhận | 14 lệnh (xem Phần 2) |
+| Tổng số Unit Test | 111 unit tests (Backend/tests/) + 118 tests (qa/backend/) (PASS 100%) |
+| Số lần AI sinh code sai phải sửa | 28 lần (xem Phần 4) |
+| Số Prompt phức tạp được ghi nhận | 23 lệnh (xem Phần 1 & Phần 2) |
+| Số đoạn code AI sinh được lưu vết | 18 đoạn (xem Phần 2) |
 | Số đoạn code giữ nguyên | 11 đoạn (xem Phần 3) |
 | Số commit Git | Đã push lên master (qlsachkn3) |
 
@@ -65,4 +71,4 @@ Cung cấp một **bản tổng hợp đầy đủ** các nhật ký (log), prom
 
 ---
 
-*File này được cập nhật lần cuối ngày 2026-08-31 để phản ánh đầy đủ toàn bộ quá trình phát triển dự án từ 09/08 đến 31/08.*
+*File này được cập nhật bổ sung ngày 2026-09-27 để phản ánh đầy đủ các bản vá lỗi tài khoản, chatbot RAG, chuẩn hóa kho sách 315 cuốn và quy hoạch triển khai Docker.*

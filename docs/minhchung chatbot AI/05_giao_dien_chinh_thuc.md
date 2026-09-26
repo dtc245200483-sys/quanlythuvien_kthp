@@ -226,10 +226,11 @@ KIỂM THỬ: Nút tròn đúng vị trí, test câu hỏi thật, test câu h�
 
 ## Phần sinh viên đã kiểm tra chỉnh sửa
 - [x] **Hoàn thiện giao diện Quản lý sách cho Thủ thư (16/09/2026)**: Phát hiện modal "Thêm sách / Sửa sách" trong `Frontend/books.html` chưa có trường nhập tóm tắt sách để cung cấp dữ liệu cho Chatbot AI. Đã bổ sung ô `<textarea name="tomTat">` chiếm full-width (`grid-column: 1 / -1`), tự động nạp tóm tắt cũ khi bấm "Sửa" trong `books.js`, đồng bộ gửi lên API khi "Lưu".
+- [x] **Sửa lỗi hiển thị thẻ sách gợi ý & đồng bộ Quick Filter trên `chatbot.html` (27/09/2026)**: Chuẩn hóa luồng render card sách gợi ý trong `frontend/chatbot.html` đọc đúng trường dữ liệu `data.ket_qua`, hiển thị ảnh bìa, tác giả, trạng thái còn hàng và nút "Xem chi tiết", loại bỏ lỗi nút gợi ý thể loại không phản hồi.
 
 ---
 
 ## Ngày thực hiện
-- **Ngày thực hiện**: 15/09/2026 (Cập nhật hoàn thiện: 16/09/2026)
+- **Ngày thực hiện**: 15/09/2026 (Cập nhật hoàn thiện: 16/09/2026; Vá lỗi hiển thị thẻ gợi ý: 27/09/2026)
 - **Người thực hiện**: Kỹ sư Frontend / Thành viên nhóm đề tài Web App Thư viện ICTU
 

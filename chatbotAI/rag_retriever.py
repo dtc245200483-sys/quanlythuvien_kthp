@@ -167,12 +167,19 @@ def _fuzzy_match_ten(cau_hoi: str, tat_ca_sach: list[dict]) -> list[dict]:
 # Hàm phát hiện tra cứu tên riêng (Exact-ish title lookup detection)
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Từ khóa chỉ rõ đây là tìm theo CHỦ ĐỀ, không phải tra cứu tên sách cụ thể
+# Từ khóa chỉ rõ đây là tìm theo CHỦ ĐỀ / THỂ LOẠI, không phải tra cứu tên sách cụ thể
 _TU_KHOA_TIM_KIEM_CHU_DE = [
     "sách về", "sách gì", "sách nào", "có sách", "gợi ý", "tìm kiếm",
     "muốn tìm", "liên quan", "đọc gì", "cho tôi", "hình như", "cuốn gì",
     "tôi cần", "tôi muốn", "giới thiệu", "tìm sách", "sách hay",
-    "sách của", "gì đó", "của tác giả",
+    "sách của", "gì đó", "của tác giả", "thể loại", "chủ đề",
+    "kinh tế", "quản trị", "kinh doanh", "làm giàu", "tài chính",
+    "lập trình", "cntt", "công nghệ thông tin", "phần mềm", "tin học",
+    "trí tuệ nhân tạo", "ai", "chatgpt", "khoa học máy tính", "machine learning",
+    "an ninh mạng", "bảo mật", "an toàn thông tin", "hacker", "mạng máy tính",
+    "kỹ năng", "giao tiếp", "phát triển bản thân", "tâm lý", "ứng xử",
+    "đáng đọc", "sách mới", "sách nổi bật", "hay nhất", "kinh điển",
+    "tư vấn", "danh sách", "top sách", "nên đọc", "học lập trình"
 ]
 
 
@@ -207,11 +214,17 @@ def _phat_hien_tra_cuu_ten_sach(
     except ImportError:
         return False, False, []
 
+    import re
     cau_hoi_norm = cau_hoi.strip().lower()
+    cau_hoi_clean = re.sub(r"^[📚💻🤖🔒🗣️⭐\s\-\:\.\,]+", "", cau_hoi_norm).strip()
 
-    # Nếu câu hỏi chứa từ khóa tìm theo chủ đề → không phải tra cứu tên sách
+    # Nếu câu hỏi bắt đầu bằng từ "sách" hoặc chứa emoji/từ khóa chủ đề → 100% tìm chủ đề
+    if cau_hoi_norm.startswith("sách ") or cau_hoi_clean.startswith("sách "):
+        return False, False, []
+
+    # Nếu câu hỏi chứa từ khóa tìm theo chủ đề/thể loại → không phải tra cứu tên sách
     for tu_khoa in _TU_KHOA_TIM_KIEM_CHU_DE:
-        if tu_khoa in cau_hoi_norm:
+        if tu_khoa in cau_hoi_norm or tu_khoa in cau_hoi_clean:
             return False, False, []
 
     # So khớp TOÀN BỘ chuỗi (fuzz.ratio) — khác partial_ratio chỉ tìm chuỗi con
