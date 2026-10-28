@@ -4016,3 +4016,133 @@
 [2026-09-26 22:31:31] [VECTORSTORE] [SEARCH] 'Gợi ý sách về Lập trình phần mềm và Công nghệ thôn' → 10 kết quả [70ms] | Top-1: Ứng Dụng Vi Xử Lý Và Vi Điều K (0.8471)
 [2026-09-26 22:31:31] [RAG_RETRIEVER] 'Gợi ý sách về Lập trình phần mềm và Công nghệ thôn' → 8/12 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.9400, la_lac_de=False)
 [2026-09-26 22:31:37] [LLM] [deepseek/deepseek-chat] [SUCCESS] [6806ms] [4680 chars] Response: 1020 chars
+[2026-10-25 01:07:20] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-10-25 01:07:20] [VECTORSTORE] [COUNT] Tổng số sách đã index: 148
+[2026-10-25 01:07:20] [VECTORSTORE] [COUNT] Tổng số sách đã index: 148
+[2026-10-28 08:22:44] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 08:22:44] [VECTORSTORE] [COUNT] Tổng số sách đã index: 148
+[2026-10-28 08:22:44] [VECTORSTORE] [COUNT] Tổng số sách đã index: 148
+[2026-10-28 08:50:52] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 08:51:04] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-10-28 08:51:34] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 08:51:34] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-10-28 08:51:38] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 08:51:38] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-10-28 08:51:59] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [55042ms] Model sẵn sàng.
+[2026-10-28 08:52:00] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [138ms] [518 chars] → 384-dim vector
+[2026-10-28 08:52:00] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [67844ms] | embed từ: tom_tat
+[2026-10-28 08:52:00] [VS_SYNC] CON_HANG UPDATE '5CSKDVKD0002' — soLuong=3 con_hang=True
+[2026-10-28 08:52:00] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [25652ms] Model sẵn sàng.
+[2026-10-28 08:52:00] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [70ms] [518 chars] → 384-dim vector
+[2026-10-28 08:52:00] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [25814ms] | embed từ: tom_tat
+[2026-10-28 08:52:00] [VS_SYNC] CON_HANG UPDATE '5CSKDVKD0002' — soLuong=4 con_hang=True
+[2026-10-28 08:52:00] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [21567ms] Model sẵn sàng.
+[2026-10-28 08:52:00] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [132ms] [518 chars] → 384-dim vector
+[2026-10-28 08:52:00] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [21783ms] | embed từ: tom_tat
+[2026-10-28 08:52:00] [VS_SYNC] CON_HANG UPDATE '5CSKDVKD0002' — soLuong=5 con_hang=True
+[2026-10-28 08:52:29] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 08:52:29] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [142ms] [518 chars] → 384-dim vector
+[2026-10-28 08:52:30] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [216ms] | embed từ: tom_tat
+[2026-10-28 08:52:30] [VS_SYNC] CON_HANG UPDATE '5CSKDVKD0002' — soLuong=4 con_hang=True
+[2026-10-28 09:07:41] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:07:41] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [46ms] [518 chars] → 384-dim vector
+[2026-10-28 09:07:41] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [116ms] | embed từ: tom_tat
+[2026-10-28 09:07:41] [VS_SYNC] CON_HANG UPDATE '5CSKDVKD0002' — soLuong=2 con_hang=True
+[2026-10-28 09:08:12] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:08:12] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [74ms] [518 chars] → 384-dim vector
+[2026-10-28 09:08:12] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [136ms] | embed từ: tom_tat
+[2026-10-28 09:08:12] [VS_SYNC] CON_HANG UPDATE '5CSKDVKD0002' — soLuong=4 con_hang=True
+[2026-10-28 09:08:13] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:08:13] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [68ms] [518 chars] → 384-dim vector
+[2026-10-28 09:08:13] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [127ms] | embed từ: tom_tat
+[2026-10-28 09:08:13] [VS_SYNC] CON_HANG UPDATE '5CSKDVKD0002' — soLuong=5 con_hang=True
+[2026-10-28 09:08:49] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:08:49] [VECTORSTORE] [COUNT] Tổng số sách đã index: 148
+[2026-10-28 09:09:09] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:09:19] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 16:09:35] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: D:\ung dung tri tue nhan ao\app\chatbotAI\vector_db
+[2026-10-28 16:09:35] [VECTORSTORE] [COUNT] Tổng số sách đã index: 148
+[2026-10-28 16:09:35] [VECTORSTORE] [COUNT] Tổng số sách đã index: 148
+[2026-10-28 09:33:04] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:33:04] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [164ms] [390 chars] → 384-dim vector
+[2026-10-28 09:33:04] [VECTORSTORE] [UPSERT] 'CNKT0009' — 'Chuyên Ngành Kỹ Thuật - Điện Tử' [241ms] | embed từ: tom_tat
+[2026-10-28 09:33:04] [VS_SYNC] CON_HANG UPDATE 'CNKT0009' — soLuong=4 con_hang=True
+[2026-10-28 09:33:14] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:33:15] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [86ms] [390 chars] → 384-dim vector
+[2026-10-28 09:33:15] [VECTORSTORE] [UPSERT] 'CNKT0009' — 'Chuyên Ngành Kỹ Thuật - Điện Tử' [160ms] | embed từ: tom_tat
+[2026-10-28 09:33:15] [VS_SYNC] CON_HANG UPDATE 'CNKT0009' — soLuong=5 con_hang=True
+[2026-10-28 09:33:28] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:33:28] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [73ms] [70 chars] → 384-dim vector
+[2026-10-28 09:33:28] [VECTORSTORE] [SEARCH] 'Gợi ý sách về Lập trình phần mềm và Công nghệ thôn' → 10 kết quả [82ms] | Top-1: Ứng Dụng Vi Xử Lý Và Vi Điều K (0.8471)
+[2026-10-28 09:33:28] [RAG_RETRIEVER] 'Gợi ý sách về Lập trình phần mềm và Công nghệ thôn' → 8/12 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.9400, la_lac_de=False)
+[2026-10-28 09:33:50] [LLM] [deepseek/deepseek-chat] [SUCCESS] [21432ms] [4680 chars] Response: 1119 chars
+[2026-10-28 09:35:35] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:35:36] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [70ms] [86 chars] → 384-dim vector
+[2026-10-28 09:35:36] [VECTORSTORE] [SEARCH] 'Gợi ý sách về Kỹ năng sống, Phát triển bản thân và' → 10 kết quả [82ms] | Top-1: Tự Học 29 Chủ Đề Giao Tiếp Tiế (0.7895)
+[2026-10-28 09:35:36] [RAG_RETRIEVER] 'Gợi ý sách về Kỹ năng sống, Phát triển bản thân và' → 8/12 sách đạt ngưỡng 0.35 (max_score_truoc_loc=1.0000, la_lac_de=False)
+[2026-10-28 09:35:48] [LLM] [deepseek/deepseek-chat] [SUCCESS] [12659ms] [4381 chars] Response: 573 chars
+[2026-10-28 09:36:15] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:39:08] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 148 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:39:47] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:39:47] [VECTORSTORE] [COUNT] Tổng số sách đã index: 63
+[2026-10-28 09:40:05] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:40:27] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:43:39] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:43:51] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:44:00] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-10-28 09:44:10] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [9723ms] Model sẵn sàng.
+[2026-10-28 09:44:10] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [133ms] [70 chars] → 384-dim vector
+[2026-10-28 09:44:10] [VECTORSTORE] [SEARCH] 'Gợi ý sách về Lập trình phần mềm và Công nghệ thôn' → 10 kết quả [19359ms] | Top-1: Ứng Dụng Vi Xử Lý Và Vi Điều K (0.8471)
+[2026-10-28 09:44:10] [RAG_RETRIEVER] 'Gợi ý sách về Lập trình phần mềm và Công nghệ thôn' → 8/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.6942, la_lac_de=False)
+[2026-10-28 09:44:21] [LLM] [deepseek/deepseek-chat] [SUCCESS] [10797ms] [5261 chars] Response: 1064 chars
+[2026-10-28 09:46:19] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:46:19] [VECTORSTORE] [COUNT] Tổng số sách đã index: 63
+[2026-10-28 09:46:29] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:50:58] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:51:04] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-10-28 09:51:14] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [9357ms] Model sẵn sàng.
+[2026-10-28 09:51:14] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [119ms] [86 chars] → 384-dim vector
+[2026-10-28 09:51:14] [VECTORSTORE] [SEARCH] 'Gợi ý sách về Kỹ năng sống, Phát triển bản thân và' → 10 kết quả [16171ms] | Top-1: Tự Học 29 Chủ Đề Giao Tiếp Tiế (0.7895)
+[2026-10-28 09:51:14] [RAG_RETRIEVER] 'Gợi ý sách về Kỹ năng sống, Phát triển bản thân và' → 8/11 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.9316, la_lac_de=False)
+[2026-10-28 09:51:27] [LLM] [deepseek/deepseek-chat] [SUCCESS] [13346ms] [5276 chars] Response: 870 chars
+[2026-10-28 09:51:48] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:51:48] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [28ms] [70 chars] → 384-dim vector
+[2026-10-28 09:51:48] [VECTORSTORE] [SEARCH] 'Gợi ý sách về Lập trình phần mềm và Công nghệ thôn' → 10 kết quả [34ms] | Top-1: Ứng Dụng Vi Xử Lý Và Vi Điều K (0.8471)
+[2026-10-28 09:51:48] [RAG_RETRIEVER] 'Gợi ý sách về Lập trình phần mềm và Công nghệ thôn' → 8/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.6942, la_lac_de=False)
+[2026-10-28 09:51:54] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:51:58] [LLM] [deepseek/deepseek-chat] [SUCCESS] [10631ms] [5261 chars] Response: 1093 chars
+[2026-10-28 09:54:08] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 09:54:08] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [137ms] [444 chars] → 384-dim vector
+[2026-10-28 09:54:08] [VECTORSTORE] [SEARCH] 'tìm cho tôi sách về Tác phẩm kinh điển của Stephen' → 10 kết quả [146ms] | Top-1: 7 Thói Quen Hiệu Quả - The 7 H (0.9517)
+[2026-10-28 09:54:08] [RAG_RETRIEVER] 'tìm cho tôi sách về Tác phẩm kinh điển của Stephen' → 8/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=1.3000, la_lac_de=False)
+[2026-10-28 09:54:28] [LLM] [deepseek/deepseek-chat] [SUCCESS] [19143ms] [5785 chars] Response: 678 chars
+[2026-10-28 10:01:53] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 63 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 10:01:53] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [118ms] [403 chars] → 384-dim vector
+[2026-10-28 10:01:53] [VECTORSTORE] [UPSERT] 'MHHSABS111' — 'Deep learning' [209ms] | embed từ: tom_tat
+[2026-10-28 10:01:53] [VS_SYNC] UPSERT 'MHHSABS111' — 'Deep learning' (con_hang=True)
+[2026-10-28 10:02:37] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 64 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 10:02:37] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [43ms] [403 chars] → 384-dim vector
+[2026-10-28 10:02:37] [VECTORSTORE] [UPSERT] 'MHHSABS111' — 'Deep learning' [119ms] | embed từ: tom_tat
+[2026-10-28 10:02:37] [VS_SYNC] CON_HANG UPDATE 'MHHSABS111' — soLuong=0 con_hang=False
+[2026-10-28 11:01:07] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 64 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 11:01:19] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-10-28 11:01:28] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 64 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 11:01:28] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADING] Đang load model lần đầu tiên...
+[2026-10-28 11:01:29] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [10187ms] Model sẵn sàng.
+[2026-10-28 11:01:30] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [327ms] [518 chars] → 384-dim vector
+[2026-10-28 11:01:30] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [22811ms] | embed từ: tom_tat
+[2026-10-28 11:01:30] [VS_SYNC] UPSERT '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' (con_hang=True)
+[2026-10-28 11:01:38] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [LOADED] [10162ms] Model sẵn sàng.
+[2026-10-28 11:01:38] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [60ms] [518 chars] → 384-dim vector
+[2026-10-28 11:01:39] [VECTORSTORE] [UPSERT] '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' [10306ms] | embed từ: tom_tat
+[2026-10-28 11:01:39] [VS_SYNC] UPSERT '5CSKDVKD0002' — '50 Cuốn Sách Kinh Điển Về Kinh Doanh' (con_hang=True)
+[2026-10-28 11:03:18] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 64 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 11:03:18] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [73ms] [59 chars] → 384-dim vector
+[2026-10-28 11:03:18] [VECTORSTORE] [SEARCH] 'Gợi ý sách về Kinh tế và Quản trị kinh doanh trong' → 10 kết quả [84ms] | Top-1: 50 Cuốn Sách Kinh Điển Về Kinh (0.8401)
+[2026-10-28 11:03:18] [RAG_RETRIEVER] 'Gợi ý sách về Kinh tế và Quản trị kinh doanh trong' → 8/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.6802, la_lac_de=False)
+[2026-10-28 11:04:06] [LLM] [deepseek/deepseek-chat] [SUCCESS] [48307ms] [5268 chars] Response: 1398 chars
+[2026-10-28 11:13:17] [VECTORSTORE] [INIT] Collection 'sach_thu_vien' sẵn sàng. Hiện có 64 sách đã index. DB: /app/chatbotAI/vector_db
+[2026-10-28 11:13:18] [EMBEDDING] [paraphrase-multilingual-MiniLM-L12-v2] [SUCCESS] [93ms] [24 chars] → 384-dim vector
+[2026-10-28 11:13:18] [VECTORSTORE] [SEARCH] 'tìm sách có chữ việt nam' → 10 kết quả [99ms] | Top-1: Giáo Trình Hán Ngữ - Tập 1: Qu (0.7675)
+[2026-10-28 11:13:18] [RAG_RETRIEVER] 'tìm sách có chữ việt nam' → 8/10 sách đạt ngưỡng 0.35 (max_score_truoc_loc=0.5350, la_lac_de=False)
+[2026-10-28 11:13:56] [LLM] [deepseek/deepseek-chat] [SUCCESS] [38744ms] [5151 chars] Response: 426 chars

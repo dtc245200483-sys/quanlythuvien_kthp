@@ -4,7 +4,7 @@
 
 Với vai trò là người làm chủ hệ thống, tôi liên tục đóng vai trò **Người kiểm duyệt (Code Reviewer) và Kiến trúc sư (Software Architect)**: phát hiện lỗi của AI, phân tích nguyên nhân tận gốc, bác bỏ các đề xuất sai lệch và **ra lệnh/điều hướng nghiêm ngặt** buộc AI phải sửa lại code đúng chuẩn.
 
-Dưới đây là 23 minh chứng tiêu biểu (được sắp xếp theo đúng trình tự thời gian phát triển dự án) khẳng định năng lực điều khiển AI của tôi:
+Dưới đây là 32 minh chứng tiêu biểu (được sắp xếp theo đúng trình tự thời gian phát triển dự án) khẳng định năng lực điều khiển AI của tôi:
 
 ## GIAI ĐOẠN 1: KHỞI TẠO NỀN TẢNG & PHÂN QUYỀN (09/08 - 10/08/2026)
 
@@ -160,6 +160,46 @@ Khi nhấn đúp vào file `run/1_chay_docker.bat`, cửa sổ Command Prompt l�
 3. Thêm lệnh tự động mở trình duyệt web: `Start-Process "http://localhost:8000/"`.
 4. Thêm chốt chặn `pause` / `Read-Host` hiển thị danh sách tài khoản mẫu và không bao giờ tự đóng màn hình.
 5. Gom toàn bộ file Docker (`Dockerfile`, `docker-compose.yml`, `.dockerignore`) vào thư mục riêng `docker/`, cấu hình `name: app` để giữ nguyên các Docker volume (`app_mssql_data`, `app_chroma_data`), dọn sạch thư mục gốc dự án.
+
+
+---
+
+## GIAI ĐOẠN 6: KIỂM THỬ THỰC ĐỊA, CHUẨN HÓA DỮ LIỆU & BẢO VỆ ĐỒ ÁN (28/10/2026)
+
+### 29. Dọn dẹp Thể loại, Nhà xuất bản rác và Chuẩn hóa 100% Danh mục sách thực tế (28/10)
+Khi rà soát CSDL phục vụ buổi bảo vệ đồ án tốt nghiệp, tôi phát hiện bảng `TheLoai` tồn tại 9 mã thể loại rác (`TL_CN`, `TL_GD`, `TL_KH`...) và bảng `Nxb` tồn tại 6 nhà xuất bản không sử dụng (di chứng từ các script seed thử nghiệm cũ). Đáng chú ý, có tới 39 cuốn sách trong bảng `Books` bị `theLoaiId = NULL` và 12 cuốn bị `nxbId = NULL`, thiếu 5 thể loại chuyên ngành chuẩn.
+**Cách tôi điều khiển AI:**
+1. Nghiêm cấm xóa bừa bãi làm hỏng ràng buộc khóa ngoại. Bắt AI lập bảng thống kê toàn bộ các mã rác không gắn với cuốn sách nào trước khi thực hiện.
+2. Viết script Python kết nối SQL Server xóa sạch các thể loại và NXB không dùng (`TL_CN`, `TL_GD`, `TL_KH`, `TL_LS`, `TL_VH`, `TL04` cũ, `TL05` cũ, `TL06` cũ, `TL07` cũ).
+3. Bổ sung 5 thể loại chuẩn (`TL04`: Kỹ thuật Ô tô, `TL05`: Điện tử - Viễn thông, `TL06`: Ngôn ngữ, `TL07`: Tài chính - Ngân hàng, `TL08`: Thiết kế đồ họa - Mỹ thuật số) và 5 nhà xuất bản đối tác bằng chuỗi UTF-8 chuẩn xác.
+4. Cập nhật phân loại cho toàn bộ 39 cuốn sách bị NULL. Kết quả: 100% 63/63 cuốn sách đều có đầy đủ Thể loại và Nhà xuất bản chuẩn.
+
+### 30. Thanh lọc 85 sách giả lập (Ghost/Test Books) khỏi ChromaDB Vector Store của Trợ lý AI (28/10)
+Kiểm tra cơ sở dữ liệu vector của Trợ lý Chatbot AI trong Docker volume `chroma_data`, tôi phát hiện số lượng vector lên tới 148 cuốn, trong khi kho sách thực tế chỉ có 63 cuốn.
+**Phân tích nguyên nhân:** Quá trình chạy bộ kiểm thử tự động (Unit Test / Integration Test) đã sinh ra 85 cuốn sách giả lập có tiền tố `TEST...`. Do cơ chế đồng bộ tự động `_dong_bo_sach_len_vs` được kích hoạt khi test, các cuốn sách ma này đã bị nhúng vào Vector Store vĩnh viễn, khiến Chatbot AI khi độc giả hỏi có thể gợi ý ra sách không hề có thật trong thư viện trường.
+**Cách tôi điều khiển AI:**
+1. Viết script Python truy vấn trực tiếp ChromaDB Collection `books_v1`.
+2. Lọc chính xác 85 ID sách mang tiền tố `TEST...` và xóa triệt để khỏi bộ nhớ Vector Store.
+3. Xác minh số lượng vector sau dọn dẹp: Đúng chính xác 63 cuốn sách thực tế, 0 sách rác, đảm bảo chatbot chỉ gợi ý sách đang lưu hành trong thư viện.
+
+### 31. Bắt lỗi sai số Microsecond (Precision Mismatch) tính sai vị trí hàng đợi Đặt trước (28/10)
+Khi cho 2 tài khoản độc giả đặt trước cùng 1 cuốn sách đã hết (`Deep learning`), trên giao diện của cả 2 độc giả đều hiển thị "Vị trí: 1" (lẽ ra người đặt sau phải hiển thị Vị trí 2).
+**Phân tích nguyên nhân gốc rễ:** Trong hàm `_out()` tại `Backend/app/routers/reservations.py`, vị trí hàng đợi được tính bằng câu lệnh:
+`DatTruoc.ngay_dat <= res.ngay_dat`.
+Cột `ngay_dat` trong SQL Server sử dụng kiểu `DATETIME` cổ điển (độ chính xác 1/300 giây →pprox→ 3.33ms), lưu giá trị dạng `.723333`. Khi Python đọc ra qua thư viện pyodbc, nó làm tròn thành `.723000`. Khi gửi lại câu query so sánh `<=`, SQL Server ép kiểu so sánh `723333 <= 723000` →
+ightarrow→ Kết quả là **FALSE**. Bản ghi của người thứ 2 không tự đếm chính nó, khiến số thứ tự bị hụt từ 2 xuống 1!
+**Cách tôi điều khiển AI:**
+1. Bác bỏ hoàn toàn phép so sánh thời gian `<=` dễ bị sai số microsecond giữa các hệ quản trị CSDL.
+2. Tái cấu trúc thuật toán sang cơ chế xếp hạng theo chỉ số (Index-based ranking): Truy vấn toàn bộ mã đặt đang chờ theo đúng thứ tự `order_by(DatTruoc.ngay_dat.asc(), DatTruoc.ma_dat.asc())` và lấy `index + 1` làm vị trí.
+3. Sử dụng `ma_dat` làm tiêu chí phân xử phụ (Tie-breaker), đảm bảo kể cả khi 2 người đặt trong cùng một tích tắc, thứ tự hàng đợi vẫn luôn được phân định duy nhất (người thứ nhất vị trí 1, người thứ hai chắc chắn là vị trí 2).
+
+### 32. Bổ sung cột "Vị trí" và Chốt chặn chống chen hàng (Strict FIFO) trên màn hình Thủ thư (28/10)
+Kiểm tra màn hình xử lý của Thủ thư (`reservations.html`), tôi phát hiện 2 điểm bất hợp lý:
+1. Bảng của thủ thư không có cột "Vị trí", thủ thư không biết ai là người đặt trước, ai là người đặt sau.
+2. Nút `[Sẵn sàng]` hiển thị ở tất cả các dòng chờ xử lý. Nếu thủ thư bấm nhầm nút của người thứ 2, người thứ 2 sẽ được nhận sách trước, phá vỡ nguyên tắc công bằng của hàng đợi.
+**Cách tôi điều khiển AI:**
+1. **Frontend (`reservations.html` & `reservations.js`):** Bổ sung cột "Vị trí" vào bảng của thủ thư. Đồng thời cài đặt cơ chế nút thông minh: Chỉ người ở **Vị trí 1** mới có nút xanh `[Sẵn sàng]`. Người từ **Vị trí 2 trở đi** tự động chuyển thành nút xám vô hiệu hóa `[Chờ lượt]`.
+2. **Backend (`routers/reservations.py`):** Trong API `fulfill_reservation`, bổ sung chốt chặn kiểm tra: nếu phiếu đặt trước không phải là phiếu ưu tiên số 1 đang chờ của cuốn sách đó, backend lập tức từ chối và trả về lỗi: `HTTP 400: Phải xử lý theo thứ tự hàng đợi (FIFO). Phiếu ... đang ở vị trí 1.`
 
 ---
 **KẾT LUẬN CUỐI CÙNG:** Bằng sự bao quát từ Data, Backend, Frontend cho tới Trải nghiệm người dùng, tôi đã bổ khuyết hoàn hảo cho sự máy móc của AI. Phần mềm cuối cùng không chỉ sạch bug về mặt kỹ thuật, mà còn cực kỳ **Thấu hiểu nghiệp vụ và Tôn trọng người dùng**.

@@ -30,11 +30,19 @@ def _out(db: Session, res: DatTruoc) -> ReservationOut:
     
     queue_pos = None
     if res.trang_thai in ["CHO_XU_LY", "CHO_XEP_HANG", "SAN_SANG"]:
-        queue_pos = db.query(DatTruoc).filter(
-            DatTruoc.ma_sach == res.ma_sach,
-            DatTruoc.trang_thai.in_(["CHO_XU_LY", "CHO_XEP_HANG", "SAN_SANG"]),
-            DatTruoc.ngay_dat <= res.ngay_dat
-        ).count()
+        active_reservations = (
+            db.query(DatTruoc.ma_dat)
+            .filter(
+                DatTruoc.ma_sach == res.ma_sach,
+                DatTruoc.trang_thai.in_(["CHO_XU_LY", "CHO_XEP_HANG", "SAN_SANG"]),
+            )
+            .order_by(DatTruoc.ngay_dat.asc(), DatTruoc.ma_dat.asc())
+            .all()
+        )
+        queue_pos = next(
+            (idx + 1 for idx, (ma,) in enumerate(active_reservations) if ma == res.ma_dat),
+            None,
+        )
         
     return ReservationOut(
         ma_dat=res.ma_dat,
@@ -336,6 +344,21 @@ def fulfill_reservation(
     book = db.get(Book, res.ma_sach, with_for_update=True)
     if book is None:
         raise HTTPException(status_code=404, detail="Không tìm thấy sách.")
+
+    first_pending = (
+        db.query(DatTruoc)
+        .filter(
+            DatTruoc.ma_sach == res.ma_sach,
+            DatTruoc.trang_thai == "CHO_XU_LY",
+        )
+        .order_by(DatTruoc.ngay_dat.asc(), DatTruoc.ma_dat.asc())
+        .first()
+    )
+    if first_pending and first_pending.ma_dat != res.ma_dat:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Phải xử lý theo thứ tự hàng đợi (FIFO). Phiếu {first_pending.ma_dat} đang ở vị trí 1.",
+        )
     
     from ..models import BookCopy
     copy = (

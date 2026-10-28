@@ -153,7 +153,7 @@
       var emptyRow = document.createElement("tr");
       var emptyCell = document.createElement("td");
       emptyCell.className = "empty-row";
-      emptyCell.colSpan = 7;
+      emptyCell.colSpan = 9;
       emptyCell.textContent = "Chưa có đặt trước nào.";
       emptyRow.appendChild(emptyCell);
       tbody.appendChild(emptyRow);
@@ -169,11 +169,12 @@
         r.ngayDat ? new Date(r.ngayDat).toLocaleString("vi-VN") : "—",
         r.hanNhan ? new Date(r.hanNhan).toLocaleString("vi-VN") : "—",
         TRANG_THAI_LABEL(r.trangThai),
+        r.queue_position !== null && r.queue_position !== undefined ? r.queue_position : "—",
         null
       ];
       values.forEach(function (v, index) {
         var td = document.createElement("td");
-        if (index === 7) {
+        if (index === 8) {
           if (isAdmin) {
             td.textContent = "—";
           } else {
@@ -189,14 +190,25 @@
               });
               actions.appendChild(deleteBtn);
             } else if (r.trangThai === "CHO_XU_LY") {
-              var ready = document.createElement("button");
-              ready.type = "button";
-              ready.className = "btn btn-primary";
-              ready.textContent = "Sẵn sàng";
-              ready.addEventListener("click", function () {
-                fulfill(r);
-              });
-              actions.appendChild(ready);
+              if (r.queue_position === 1) {
+                var ready = document.createElement("button");
+                ready.type = "button";
+                ready.className = "btn btn-primary";
+                ready.textContent = "Sẵn sàng";
+                ready.title = "Duyệt sẵn sàng nhận sách cho người đứng đầu hàng đợi";
+                ready.addEventListener("click", function () {
+                  fulfill(r);
+                });
+                actions.appendChild(ready);
+              } else {
+                var waitBtn = document.createElement("button");
+                waitBtn.type = "button";
+                waitBtn.className = "btn btn-secondary";
+                waitBtn.disabled = true;
+                waitBtn.title = "Đang chờ đến lượt phục vụ theo thứ tự hàng đợi";
+                waitBtn.textContent = "Chờ lượt";
+                actions.appendChild(waitBtn);
+              }
             }
             if (r.trangThai === "SAN_SANG") {
               var confirmBtn = document.createElement("button");

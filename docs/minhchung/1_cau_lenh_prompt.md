@@ -91,4 +91,18 @@ Dưới đây là 18 Prompt tiêu biểu (được sắp xếp theo đúng trìn
 ### 23. Prompt tái cấu trúc thư mục Docker và khắc phục lỗi tắt phụt cửa sổ (27/09)
 > *"Tại sao sau khi dừng docker xong tôi nhấn vào file 1_chay_docker.bat thì nó tự bị tắt phụt đi? Sửa lại script sao cho khi nhấn vào là tự bật web lên. Đồng thời gom toàn bộ các file Docker (Dockerfile, docker-compose.yml, .dockerignore) vào thư mục docker/ sao cho gọn gàng thư mục gốc và web vẫn hoạt động bình thường 100% không bị lỗi dữ liệu."*
 
+---
 
+## GIAI ĐOẠN 6: KIỂM THỬ THỰC ĐỊA, CHUẨN HÓA CƠ SỞ DỮ LIỆU & BẢO VỆ ĐỒ ÁN (28/10/2026)
+
+### 24. Prompt dọn dẹp Thể loại, NXB rác và chuẩn hóa danh mục 63 sách thực tế (28/10)
+> *"Kiểm tra bảng TheLoai và Nxb trong SQL Server, xóa bỏ toàn bộ các mã thể loại và nhà xuất bản rác không sử dụng từ các đợt seed thử nghiệm cũ. Đồng thời bổ sung các thể loại chuẩn bị thiếu (TL04 đến TL08) và cập nhật theLoaiId, nxbId cho tất cả các cuốn sách bị NULL để đạt 100% 63/63 cuốn sách đều có Thể loại và Nhà xuất bản chuẩn."*
+
+### 25. Prompt thanh lọc 85 sách giả lập khỏi ChromaDB Vector Store (28/10)
+> *"Tại sao số lượng vector trong ChromaDB lại lên tới 148 cuốn trong khi thư viện chỉ có 63 cuốn sách thực tế? Kiểm tra xem có phải do chạy Unit Test sinh ra các sách TEST... không. Viết script lọc và xóa sạch toàn bộ các sách ma TEST... này ra khỏi ChromaDB, đưa số lượng vector về đúng 63 cuốn sách thực tế để AI chatbot không trả lời sai sách."*
+
+### 26. Prompt truy tìm nguyên nhân và khắc phục lỗi lệch microsecond hàng đợi đặt trước (28/10)
+> *"Tại sao phần đặt trước ở phần vị trí người đặt trước ở vị trí 1 người đặt sau cũng vẫn ở vị trí 1? Vậy ví dụ 2 người cùng nhấn đặt trước cùng lúc thì sao? Tìm ra nguyên nhân gốc rễ và đưa ra phương án tối ưu nhất, xử lý triệt để sai số thời gian và đảm bảo nguyên tắc FIFO người đến trước vị trí 1, người đến sau vị trí 2."*
+
+### 27. Prompt bổ sung cột Vị trí và chốt chặn chống chen hàng cho Thủ thư (28/10)
+> *"Nếu có xếp hàng chờ thì tại sao phần duyệt đặt trước của thủ thư không có cột Vị trí? Vậy duyệt hàng chờ xếp hàng như không hả? Thêm cột Vị trí vào bảng của thủ thư, chỉ cho phép duyệt người ở vị trí 1, người từ vị trí 2 trở đi phải chờ lượt, đồng thời ở backend phải chặn không cho thủ thư duyệt chen ngang hàng đợi."*

@@ -239,8 +239,69 @@ Start-Process "http://localhost:8000/"
 Read-Host "Nhấn phím Enter để đóng cửa sổ này (Hệ thống vẫn tiếp tục chạy ngầm)..."
 ```
 
+
+### 19. Prompt sửa lỗi microsecond tính sai vị trí hàng đợi Đặt trước (28/10)
+**Prompt (Lệnh) của tôi:**
+> *"Tại sao người đặt trước ở vị trí 1 người đặt sau cũng vẫn ở vị trí 1? Ví dụ 2 người nhấn cùng lúc thì sao? Tìm nguyên nhân gốc rễ và đưa ra phương án tối ưu, sửa triệt để."*
+
+**Phản hồi của AI:**
+AI phân tích chuyên sâu câu truy vấn và phát hiện sự chênh lệch microsecond giữa `DATETIME` trong SQL Server (độ chính xác 3.33ms, lưu `.723333`) và Python (`.723000`). Bác bỏ phép so sánh thời gian `<=`, AI tái cấu trúc thuật toán `_out()` trong `Backend/app/routers/reservations.py` sang cơ chế xếp hạng theo chỉ số (Index-based ranking) với tie-breaker `ma_dat`:
+```python
+active_reservations = (
+    db.query(DatTruoc.ma_dat)
+    .filter(
+        DatTruoc.ma_sach == res.ma_sach,
+        DatTruoc.trang_thai.in_(["CHO_XU_LY", "CHO_XEP_HANG", "SAN_SANG"]),
+    )
+    .order_by(DatTruoc.ngay_dat.asc(), DatTruoc.ma_dat.asc())
+    .all()
+)
+queue_pos = next(
+    (idx + 1 for idx, (ma,) in enumerate(active_reservations) if ma == res.ma_dat),
+    None,
+)
+```
+
+### 20. Prompt bổ sung cột Vị trí và chốt chặn chống chen hàng cho Thủ thư (28/10)
+**Prompt (Lệnh) của tôi:**
+> *"Nếu có xếp hàng chờ thì tại sao phần duyệt đặt trước của thủ thư không có cột Vị trí? Duyệt hàng chờ xếp hàng như không hả? Thêm cột Vị trí và chặn duyệt chen ngang."*
+
+**Phản hồi của AI:**
+AI bổ sung cột `<th>Vị trí</th>` trong `reservations.html` và hiển thị `queue_position` trong `reservations.js`. Chỉ vị trí 1 mới có nút xanh `[Sẵn sàng]`, vị trí 2 trở đi hiển thị nút xám bị vô hiệu hóa `[Chờ lượt]`:
+```javascript
+// frontend/js/reservations.js: renderLibrarian
+if (r.queue_position === 1) {
+  var ready = document.createElement("button");
+  ready.className = "btn btn-primary";
+  ready.textContent = "Sẵn sàng";
+  ready.addEventListener("click", function () { fulfill(r); });
+  actions.appendChild(ready);
+} else {
+  var waitBtn = document.createElement("button");
+  waitBtn.className = "btn btn-secondary";
+  waitBtn.disabled = true;
+  waitBtn.textContent = "Chờ lượt";
+  actions.appendChild(waitBtn);
+}
+```
+Đồng thời tại Backend `routers/reservations.py`, chốt chặn kiểm tra FIFO được cài đặt trực tiếp trong API `fulfill_reservation`:
+```python
+# Backend/app/routers/reservations.py: fulfill_reservation
+first_pending = (
+    db.query(DatTruoc)
+    .filter(DatTruoc.ma_sach == res.ma_sach, DatTruoc.trang_thai == "CHO_XU_LY")
+    .order_by(DatTruoc.ngay_dat.asc(), DatTruoc.ma_dat.asc())
+    .first()
+)
+if first_pending and first_pending.ma_dat != res.ma_dat:
+    raise HTTPException(
+        status_code=400,
+        detail=f"Phải xử lý theo thứ tự hàng đợi (FIFO). Phiếu {first_pending.ma_dat} đang ở vị trí 1.",
+    )
+```
+
 ---
 **TỔNG KẾT PHẦN 2:**
-Thông qua 18 minh chứng trải dài từ 09/08 đến 27/09, có thể thấy AI là một cỗ máy sinh code cực kỳ mạnh mẽ, **NHƯNG** nó chỉ phát huy sức mạnh khi được định hướng bởi các **Prompt có tư duy kỹ thuật cao** của con người. Prompt yếu = Code yếu. Prompt mạnh = Code mạnh.
+Thông qua 20 minh chứng trải dài từ 09/08 đến 28/10, có thể thấy AI là một cỗ máy sinh code cực kỳ mạnh mẽ, **NHƯNG** nó chỉ phát huy sức mạnh khi được định hướng bởi các **Prompt có tư duy kỹ thuật cao** của con người. Prompt yếu = Code yếu. Prompt mạnh = Code mạnh.
 
 

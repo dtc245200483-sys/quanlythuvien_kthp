@@ -47,6 +47,10 @@ Cung cấp một **bản tổng hợp đầy đủ** các nhật ký (log), prom
 | 26/09–27/09 | Fix Chatbot Quick Category Pills (False Negative) | rag_retriever.py exact category match, hybrid boost, chatbot.html data.ket_qua | Debug RAG retrieval & xử lý lỗi logic UI |
 | 27/09 | Chuẩn hóa kho sách vật lý 5 cuốn/đầu sách (315 cuốn) | BookCopies, Books.soLuong = 5, books_catalog.json, books_data.txt, ChromaDB sync | Audit dữ liệu kho sách & chỉ đạo chuẩn hóa |
 | 27/09 | Quy hoạch thư mục Docker & nâng cấp 1-click startup | Di chuyển Docker vào docker/, name: app bảo toàn volume, run_docker.ps1 chờ SQL & auto mở web | Tối ưu đóng gói triển khai & UX khởi chạy |
+| 28/10 | Chuẩn hóa Thể loại & NXB 63 cuốn sách thực tế | Xóa 9 thể loại & 6 NXB rác, thêm 5 thể loại chuẩn UTF-8, gán theLoaiId cho 39 sách bị NULL | Rà soát toàn vẹn CSDL trước bảo vệ đồ án |
+| 28/10 | Thanh lọc 85 sách giả lập (TEST...) trong ChromaDB | Xóa sạch 85 vector rác sinh ra từ Unit Test, đồng bộ chuẩn 63 vector sách thật | Audit Vector Store & chất lượng phản hồi AI |
+| 28/10 | Sửa lỗi Microsecond hàng đợi Đặt trước | Thuật toán index-based ranking, tie-breaker ma_dat trong reservations.py | Bắt lỗi precision mismatch SQL Server vs Python |
+| 28/10 | Bổ sung cột Vị trí & Chặn chen hàng cho Thủ thư | Thêm cột Vị trí trên reservations.html/js, nút Chờ lượt, chốt chặn FIFO trong fulfill_reservation | Thiết kế trải nghiệm công bằng & bảo vệ luồng FIFO |
 
 ## Thống kê tổng quan
 
@@ -55,9 +59,9 @@ Cung cấp một **bản tổng hợp đầy đủ** các nhật ký (log), prom
 | Tổng số log trong changelog | ~700 dòng |
 | Tổng số migration (schema versioning) | 14 file |
 | Tổng số Unit Test | 111 unit tests (Backend/tests/) + 118 tests (qa/backend/) (PASS 100%) |
-| Số lần AI sinh code sai phải sửa | 28 lần (xem Phần 4) |
-| Số Prompt phức tạp được ghi nhận | 23 lệnh (xem Phần 1 & Phần 2) |
-| Số đoạn code AI sinh được lưu vết | 18 đoạn (xem Phần 2) |
+| Số lần AI sinh code sai phải sửa | 32 lần (xem Phần 4) |
+| Số Prompt phức tạp được ghi nhận | 27 lệnh (xem Phần 1 & Phần 2) |
+| Số đoạn code AI sinh được lưu vết | 20 đoạn (xem Phần 2) |
 | Số đoạn code giữ nguyên | 11 đoạn (xem Phần 3) |
 | Số commit Git | Đã push lên master (qlsachkn3) |
 
@@ -71,4 +75,4 @@ Cung cấp một **bản tổng hợp đầy đủ** các nhật ký (log), prom
 
 ---
 
-*File này được cập nhật bổ sung ngày 2026-09-27 để phản ánh đầy đủ các bản vá lỗi tài khoản, chatbot RAG, chuẩn hóa kho sách 315 cuốn và quy hoạch triển khai Docker.*
+*File này được cập nhật bổ sung ngày 2026-10-28 để phản ánh đầy đủ các đợt chuẩn hóa dữ liệu CSDL SQL Server, thanh lọc ChromaDB Vector Store và hoàn thiện cơ chế hàng đợi FIFO đặt trước phục vụ bảo vệ đồ án.*
